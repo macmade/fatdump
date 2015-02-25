@@ -1,0 +1,10 @@
+language: objective-c
+compiler: clang
+script: make
+before_install:
+  - git submodule update --init --recursive
+install:
+  - wget https://s3.amazonaws.com/xs-labs/xeos/xeos-toolchain.tar.bz2
+  - tar -xjf xeos-toolchain.tar.bz2
+  - sudo mv xeos-toolchain /usr/local/
+  - rm xeos-toolchain.tar.bz2
