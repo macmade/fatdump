@@ -1,0 +1,123 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXFileReference section */
+		0581A38F1A9C11B30009D62C /* include */ = {isa = PBXFileReference; lastKnownFileType = folder; path = include; sourceTree = "<group>"; };
+		0581A3901A9C11B30009D62C /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		0581A3911A9C11B30009D62C /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		0581A3921A9C11B30009D62C /* source */ = {isa = PBXFileReference; lastKnownFileType = folder; path = source; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		0581A3661A9C10D50009D62C = {
+			isa = PBXGroup;
+			children = (
+				0581A38F1A9C11B30009D62C /* include */,
+				0581A3901A9C11B30009D62C /* Makefile */,
+				0581A3911A9C11B30009D62C /* README.md */,
+				0581A3921A9C11B30009D62C /* source */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXLegacyTarget section */
+		0581A36B1A9C10D50009D62C /* XEOS-tools-fatdump */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = 0581A36E1A9C10D50009D62C /* Build configuration list for PBXLegacyTarget "XEOS-tools-fatdump" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			dependencies = (
+			);
+			name = "XEOS-tools-fatdump";
+			passBuildSettingsInEnvironment = 1;
+			productName = XEOS;
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXProject section */
+		0581A3671A9C10D50009D62C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0630;
+				ORGANIZATIONNAME = "XS-Labs";
+				TargetAttributes = {
+					0581A36B1A9C10D50009D62C = {
+						CreatedOnToolsVersion = 6.3;
+					};
+				};
+			};
+			buildConfigurationList = 0581A36A1A9C10D50009D62C /* Build configuration list for PBXProject "XEOS-tools-fatdump" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 0581A3661A9C10D50009D62C;
+			productRefGroup = 0581A3661A9C10D50009D62C;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				0581A36B1A9C10D50009D62C /* XEOS-tools-fatdump */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		0581A36C1A9C10D50009D62C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		0581A36D1A9C10D50009D62C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		0581A36F1A9C10D50009D62C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		0581A3701A9C10D50009D62C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0581A36A1A9C10D50009D62C /* Build configuration list for PBXProject "XEOS-tools-fatdump" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0581A36C1A9C10D50009D62C /* Debug */,
+				0581A36D1A9C10D50009D62C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0581A36E1A9C10D50009D62C /* Build configuration list for PBXLegacyTarget "XEOS-tools-fatdump" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0581A36F1A9C10D50009D62C /* Debug */,
+				0581A3701A9C10D50009D62C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0581A3671A9C10D50009D62C /* Project object */;
+}
