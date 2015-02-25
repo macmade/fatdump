@@ -65,15 +65,10 @@
 include make/Config.mk
 include make/Targets.mk
 
-TOOL    := mkfat
-PROMPT  := XEOS TOOLS MKFAT
+TOOL    := fatdump
+PROMPT  := XEOS TOOLS FATDUMP
 DEPS    := 
-FILES   := $(call XEOS_FUNC_C_FILES,$(DIR_SRC))           \
-           $(call XEOS_FUNC_C_FILES,$(DIR_SRC)Arguments/) \
-           $(call XEOS_FUNC_C_FILES,$(DIR_SRC)Disk/)      \
-           $(call XEOS_FUNC_C_FILES,$(DIR_SRC)Help/)      \
-           $(call XEOS_FUNC_C_FILES,$(DIR_SRC)IO/)        \
-           $(call XEOS_FUNC_C_FILES,$(DIR_SRC)MBR/)
+FILES   := $(call XEOS_FUNC_C_FILES,$(DIR_SRC))
 
 all: tool-build
 	
