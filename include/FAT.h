@@ -71,17 +71,31 @@
 extern "C" {
 #endif
 
-#include "C99.h"
-#include "MBR.h"
-
 typedef const struct __FAT * FATRef;
 typedef       struct __FAT * MutableFATRef;
 
-MutableFATRef   FATCreate( FILE * fp, MBRRef mbr );
+#include "C99.h"
+#include "Disk.h"
+
+typedef enum
+{
+    FATClusterTypeFree      = 0x00,
+    FATClusterTypeUsed      = 0x01,
+    FATClusterTypeLast      = 0x02,
+    FATClusterTypeBad       = 0x03,
+    FATClusterTypeReserved  = 0x04
+}
+FATClusterType;
+
+MutableFATRef   FATCreate( FILE * fp, DiskRef disk );
 void            FATDelete( MutableFATRef o );
 
 const void *    FATGetData( FATRef o );
 size_t          FATGetDataSize( FATRef o );
+
+size_t          FATGetEntryCount( FATRef o );
+uint16_t        FATGetClusterForEntry( FATRef o, size_t entry );
+FATClusterType  FATGetClusterTypeForEntry( FATRef o, size_t entry );
 
 #ifdef __cplusplus
 }

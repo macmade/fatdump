@@ -64,68 +64,15 @@
  * @copyright       (c) 2010-2015, Jean-David Gadina - www.xs-labs.com
  */
 
-#ifndef FATDUMP___PRIVATE_MBR_H
-#define FATDUMP___PRIVATE_MBR_H
+#include "Print.h"
+#include <sys/ioctl.h>
+#include <unistd.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include "C99.h"
-#include "../MBR.h"
-
-#pragma pack( 1 )
-struct __MBRData
+size_t PrintGetAvailableColumns( void )
 {
-    /* BIOS parameter block */
-    uint8_t     jmp[ 3 ];
-    uint8_t     oemID[ 8 ];
-    uint16_t    bytesPerSector;
-    uint8_t     sectorsPerCluster;
-    uint16_t    reservedSectors;
-    uint8_t     numberOfFATs;
-    uint16_t    maxRootDirEntries;
-    uint16_t    totalSectors;
-    uint8_t     mediaDescriptor;
-    uint16_t    sectorsPerFAT;
-    uint16_t    sectorsPerTrack;
-    uint16_t    headsPerCylinder;
-    uint32_t    hiddenSectors;
-    uint32_t    lbaSectors;
+    struct winsize  w;
     
-    /* Extended BIOS parameter block */
-    uint8_t     driveNumber;
-    uint8_t     reserved;
-    uint8_t     extendedBootSignature;
-    uint32_t    volumeSerialNumber;
-    uint8_t     volumeLabel[ 11 ];
-    uint8_t     fileSystem[ 8 ];
-    uint8_t     bootCode[ 448 ] ;
-    uint16_t    bootSignature;
-};
-#pragma options align=reset
+    ioctl( STDOUT_FILENO, TIOCGWINSZ, &w );
 
-#ifdef __clang__
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpadded"
-#endif
-
-struct __MBR
-{
-    struct __MBRData * data;
-    char             * oemID;
-    char             * volumeLabel;
-    char             * fileSystem;
-};
-
-#ifdef __clang__
-#pragma clang diagnostic pop
-#endif
-
-void __MBRCreateStrings( MutableMBRRef o );
-
-#ifdef __cplusplus
+    return w.ws_col;
 }
-#endif
-
-#endif /* FATDUMP___PRIVATE_MBR_H */

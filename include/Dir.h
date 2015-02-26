@@ -71,13 +71,13 @@
 extern "C" {
 #endif
 
-#include "C99.h"
-#include "MBR.h"
-
 typedef const struct __Dir * DirRef;
 typedef       struct __Dir * MutableDirRef;
 
-MutableDirRef   DirCreate( FILE * fp, MBRRef mbr );
+#include "C99.h"
+#include "Disk.h"
+
+MutableDirRef   DirCreate( FILE * fp, DiskRef disk );
 void            DirDelete( MutableDirRef o );
 
 const void *    DirGetData( DirRef o );

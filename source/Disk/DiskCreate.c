@@ -102,6 +102,29 @@ MutableDiskRef DiskCreate( const char * path )
     
     mbr = MBRCreate( fp );
     
+    if( mbr == NULL )
+    {
+        free( o );
+        fclose( fp );
+        
+        return NULL;
+    }
+    
+    o->mbr = mbr;
+    
+    if( strncmp( MBRGetFileSystem( mbr ), "FAT12", 5 ) == 0 )
+    {
+        o->format = DiskFormatFAT12;
+    }
+    else if( strncmp( MBRGetFileSystem( mbr ), "FAT16", 5 ) == 0 )
+    {
+        o->format = DiskFormatFAT16;
+    }
+    else
+    {
+        o->format = DiskFormatUnknown;
+    }
+    
     if( MBRGetReservedSectors( mbr ) > 1 )
     {
         fseek
@@ -112,20 +135,30 @@ MutableDiskRef DiskCreate( const char * path )
         );
     }
     
-    fat = FATCreate( fp, mbr );
+    fat = FATCreate( fp, o );
+    
+    if( fat == NULL )
+    {
+        MBRDelete( mbr );
+        free( o );
+        fclose( fp );
+        
+        return NULL;
+    }
+    
+    o->fat = fat;
     
     for( i = 1; i < MBRGetNumberOfFATs( mbr ); i++ )
     {
         fseek( fp, ( long )MBRGetDataSize( mbr ), SEEK_CUR );
     }
     
-    dir = DirCreate( fp, mbr );
+    dir = DirCreate( fp, o );
     
-    if( mbr == NULL || fat == NULL || dir == NULL )
+    if( dir == NULL )
     {
         MBRDelete( mbr );
         FATDelete( fat );
-        DirDelete( dir );
         
         free( o );
         fclose( fp );
@@ -133,8 +166,6 @@ MutableDiskRef DiskCreate( const char * path )
         return NULL;
     }
     
-    o->mbr = mbr;
-    o->fat = fat;
     o->dir = dir;
     
     fclose( fp );

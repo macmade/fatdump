@@ -67,18 +67,41 @@
 #include "FAT.h"
 #include "__private/FAT.h"
 
-MutableFATRef FATCreate( FILE * fp, MBRRef mbr )
+MutableFATRef FATCreate( FILE * fp, DiskRef disk )
 {
     struct __FAT * o;
     uint8_t      * data;
     size_t         s;
+    MBRRef         mbr;
     
-    if( fp == NULL || mbr == NULL )
+    mbr = DiskGetMBR( disk );
+    
+    if( fp == NULL || disk == NULL || mbr == NULL )
     {
         return NULL;
     }
     
-    s    = MBRGetSectorsPerFAT( mbr ) * MBRGetBytesPerSector( mbr );
+    s = MBRGetSectorsPerFAT( mbr ) * MBRGetBytesPerSector( mbr );
+    
+    if( DiskGetFormat( disk ) == DiskFormatFAT12 && ( s * 8 ) % 12 != 0 )
+    {
+        fprintf( stderr, "Error: invalid size for FAT12 FAT (%lu bytes).\n", ( unsigned long )s );
+        
+        return NULL;
+    }
+    else if( DiskGetFormat( disk ) == DiskFormatFAT16 && ( s * 8 ) % 16 != 0 )
+    {
+        fprintf( stderr, "Error: invalid size for FAT16 FAT (%lu bytes).\n", ( unsigned long )s );
+        
+        return NULL;
+    }
+    else if( DiskGetFormat( disk ) == DiskFormatUnknown )
+    {
+        fprintf( stderr, "Error: unknown filesystem.\n" );
+
+        return NULL;
+    }
+    
     o    = calloc( sizeof( struct __FAT ), 1 );
     data = malloc( s );
     
@@ -93,6 +116,7 @@ MutableFATRef FATCreate( FILE * fp, MBRRef mbr )
     
     o->dataSize = s;
     o->data     = data;
+    o->disk     = disk;
     
     s = fread( o->data, 1, o->dataSize, fp );
     

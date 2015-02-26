@@ -71,13 +71,21 @@
 extern "C" {
 #endif
 
+typedef const struct __Disk * DiskRef;
+typedef       struct __Disk * MutableDiskRef;
+
 #include "C99.h"
 #include "MBR.h"
 #include "FAT.h"
 #include "Dir.h"
 
-typedef const struct __Disk * DiskRef;
-typedef       struct __Disk * MutableDiskRef;
+typedef enum
+{
+    DiskFormatUnknown   = 0x00,
+    DiskFormatFAT12     = 0x01,
+    DiskFormatFAT16     = 0x02
+}
+DiskFormat;
 
 MutableDiskRef  DiskCreate( const char * path );
 void            DiskDelete( MutableDiskRef o );
@@ -85,6 +93,7 @@ void            DiskDelete( MutableDiskRef o );
 MBRRef          DiskGetMBR( DiskRef o );
 FATRef          DiskGetFAT( DiskRef o );
 DirRef          DiskGetRootDirectory( DiskRef o );
+DiskFormat      DiskGetFormat( DiskRef o );
 
 #ifdef __cplusplus
 }

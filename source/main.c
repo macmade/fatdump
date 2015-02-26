@@ -167,11 +167,67 @@ int main( int argc, char * argv[] )
     if( ArgumentsGetShowFAT( args ) )
     {
         {
-            FATRef fat;
+            FATRef          fat;
+            size_t          i;
+            size_t          entries;
+            size_t          cols;
+            size_t          n;
+            FATClusterType  type;
+            const char    * s;
             
-            fat = DiskGetFAT( disk );
+            fat     = DiskGetFAT( disk );
+            entries = FATGetEntryCount( fat );
+            cols    = PrintGetAvailableColumns();
+            n       = ( cols > 20 ) ? ( cols + 3 ) / 19 : 0;
             
             PrintHeader( "FAT:" );
+            
+            for( i = 0; i < entries; i++ )
+            {
+                type = FATGetClusterTypeForEntry( fat, i );
+                
+                switch( type )
+                {
+                    case FATClusterTypeFree:        s = "Free  "; break;
+                    case FATClusterTypeUsed:        s = "Used  "; break;
+                    case FATClusterTypeReserved:    s = "N/A   "; break;
+                    case FATClusterTypeBad:         s = "Bad   "; break;
+                    case FATClusterTypeLast:        s = "Last  "; break;
+                }
+                
+                if( type == FATClusterTypeUsed )
+                {
+                    printf
+                    (
+                        "%8lu: 0x%04lX",
+                        ( unsigned long )i,
+                        ( unsigned long )FATGetClusterForEntry( fat, i )
+                    );
+                }
+                else
+                {
+                    printf
+                    (
+                        "%8lu: %s",
+                        ( unsigned long )i,
+                        s
+                    );
+                }
+                
+                if( n > 1 && ( i + 1 ) % n && i != entries - 1 )
+                {
+                    printf( " | " );
+                }
+                else
+                {
+                    printf( "\n" );
+                }
+            }
+            
+            if( n > 1 && i % n && i != entries )
+            {
+                printf( "\n" );
+            }
         }
     }
     

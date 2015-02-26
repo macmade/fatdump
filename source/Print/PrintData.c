@@ -65,25 +65,20 @@
  */
 
 #include "Print.h"
-#include <sys/ioctl.h>
-#include <unistd.h>
 
 void PrintData( const void * data, size_t size )
 {
-    uint8_t       * p;
-    size_t          i;
-    size_t          n;
-    size_t          c;
-    struct winsize  w;
+    uint8_t * p;
+    size_t    i;
+    size_t    n;
+    size_t    c;
     
     if( data == NULL )
     {
         return;
     }
     
-    ioctl( STDOUT_FILENO, TIOCGWINSZ, &w );
-
-    c = w.ws_col;
+    c = PrintGetAvailableColumns();
     
     if( c < 20 )
     {

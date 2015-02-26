@@ -71,10 +71,10 @@
 extern "C" {
 #endif
 
-#include "C99.h"
-
 typedef const struct __MBR * MBRRef;
 typedef       struct __MBR * MutableMBRRef;
+
+#include "C99.h"
 
 MutableMBRRef   MBRCreate( FILE * fp );
 void            MBRDelete( MutableMBRRef o );

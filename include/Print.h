@@ -73,9 +73,10 @@ extern "C" {
 
 #include "C99.h"
 
-void PrintLine( void );
-void PrintHeader( const char * format, ... );
-void PrintData( const void * data, size_t size );
+size_t  PrintGetAvailableColumns( void );
+void    PrintLine( void );
+void    PrintHeader( const char * format, ... );
+void    PrintData( const void * data, size_t size );
 
 #ifdef __cplusplus
 }

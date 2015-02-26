@@ -70,13 +70,10 @@
 
 void PrintLine( void )
 {
-    size_t          c;
-    struct winsize  w;
-    char          * s;
+    size_t c;
+    char * s;
     
-    ioctl( STDOUT_FILENO, TIOCGWINSZ, &w );
-
-    c = w.ws_col;
+    c = PrintGetAvailableColumns();
     s = malloc( c + 1 );
     
     if( s == NULL )

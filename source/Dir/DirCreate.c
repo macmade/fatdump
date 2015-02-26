@@ -67,13 +67,17 @@
 #include "Dir.h"
 #include "__private/Dir.h"
 
-MutableDirRef DirCreate( FILE * fp, MBRRef mbr )
+MutableDirRef DirCreate( FILE * fp, DiskRef disk )
 {
     struct __Dir * o;
     uint8_t      * data;
     size_t         s;
+    MBRRef         mbr;
     
-    if( fp == NULL || mbr == NULL )
+    mbr = DiskGetMBR( disk );
+    
+    
+    if( fp == NULL || disk == NULL || mbr == NULL )
     {
         return NULL;
     }
@@ -101,6 +105,7 @@ MutableDirRef DirCreate( FILE * fp, MBRRef mbr )
     
     o->dataSize = s;
     o->data     = data;
+    o->disk     = disk;
     
     s = fread( o->data, 1, o->dataSize, fp );
     

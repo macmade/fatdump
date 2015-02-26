@@ -72,6 +72,8 @@ extern "C" {
 #endif
 
 #include "C99.h"
+#include "../FAT.h"
+#include "../Disk.h"
 
 #ifdef __clang__
 #pragma clang diagnostic push
@@ -82,6 +84,7 @@ struct __FAT
 {
     uint8_t * data;
     size_t    dataSize;
+    DiskRef   disk;
 };
 
 #ifdef __clang__

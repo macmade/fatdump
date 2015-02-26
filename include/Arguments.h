@@ -71,10 +71,10 @@
 extern "C" {
 #endif
 
-#include "C99.h"
-
 typedef const struct __Arguments * ArgumentsRef;
 typedef       struct __Arguments * MutableArgumentsRef;
+
+#include "C99.h"
 
 ArgumentsRef        ArgumentsGetCurrent( void );
 MutableArgumentsRef ArgumentsCreate( int argc, const char ** argv );
