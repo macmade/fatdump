@@ -67,12 +67,51 @@
 #include "DirEntry.h"
 #include "__private/DirEntry.h"
 
-int DirEntryGetAttributes( DirEntryRef o )
+time_t __DirEntryTimeFromUInt16( uint8_t * dateData, uint8_t * timeData )
 {
-    if( o == NULL )
+    uint16_t  date;
+    uint16_t  time;
+    int       y;
+    int       m;
+    int       d;
+    int       h;
+    int       i;
+    int       s;
+    struct tm t;
+    
+    if( dateData == NULL )
     {
-        return DirEntryAttributeUnknown;
+        return 0;
     }
     
-    return o->attributes;
+    date = ( uint16_t )( ( ( uint16_t )dateData[ 1 ] << 8 ) | ( ( uint16_t )dateData[ 0 ] ) );
+    time = 0;
+    
+    if( timeData != NULL )
+    {
+        time = ( uint16_t )( ( ( uint16_t )timeData[ 1 ] << 8 ) | ( ( uint16_t )timeData[ 0 ] ) );
+    }
+    
+    if( date == 0 && time == 0 )
+    {
+        return 0;
+    }
+    
+    y = date >> 9;
+    m = ( date >> 5 ) & 0x0F;
+    d = date & 0x1F;
+    h = time >> 11;
+    i = ( time >> 5 ) & 0x3F;
+    s = time & 0x1F;
+    
+    memset( &t, 0, sizeof( struct tm ) );
+    
+    t.tm_year = y + 80;
+    t.tm_mon  = m - 1;
+    t.tm_mday = d;
+    t.tm_hour = h;
+    t.tm_min  = i;
+    t.tm_sec  = s * 2;
+    
+    return mktime( &t );
 }

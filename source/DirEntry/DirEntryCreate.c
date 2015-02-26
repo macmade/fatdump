@@ -71,6 +71,7 @@ MutableDirEntryRef DirEntryCreate( FILE * fp, DirRef dir )
 {
     struct __DirEntry * o;
     uint8_t           * data;
+    char              * name;
     size_t              s;
     
     if( fp == NULL || dir == NULL )
@@ -81,11 +82,13 @@ MutableDirEntryRef DirEntryCreate( FILE * fp, DirRef dir )
     s    = 32;
     o    = calloc( sizeof( struct __DirEntry ), 1 );
     data = malloc( s );
+    name = calloc( 1, 12 );
     
-    if( o == NULL || data == NULL )
+    if( o == NULL || data == NULL || name == NULL )
     {
         free( o );
         free( data );
+        free( name );
         fprintf( stderr, "Error: out of memory.\n" );
         
         return NULL;
@@ -93,6 +96,7 @@ MutableDirEntryRef DirEntryCreate( FILE * fp, DirRef dir )
     
     o->dataSize = s;
     o->data     = data;
+    o->name     = name;
     o->dir      = dir;
     
     s = fread( o->data, 1, o->dataSize, fp );
@@ -101,10 +105,31 @@ MutableDirEntryRef DirEntryCreate( FILE * fp, DirRef dir )
     {
         free( o );
         free( data );
+        free( name );
         fprintf( stderr, "Error: invalid read of directory entry - Read %lu bytes, expected %lu\n", s, o->dataSize );
         
         return NULL;
     }
+    
+    o->attributes = ( int )( data[ 11 ] );
+    
+    if( o->attributes == DirEntryAttributeLFN )
+    {
+        return o;
+    }
+    
+    memcpy( name, data, 11 );
+    
+    o->size = ( ( size_t )data[ 28 ] <<  0 )
+            | ( ( size_t )data[ 29 ] <<  8 )
+            | ( ( size_t )data[ 31 ] << 16 )
+            | ( ( size_t )data[ 30 ] << 24 );
+    
+    o->creationTime         = __DirEntryTimeFromUInt16( data + 16, data + 14 );
+    o->lastAccessTime       = __DirEntryTimeFromUInt16( data + 18, NULL );
+    o->lastModificationTime = __DirEntryTimeFromUInt16( data + 24, data + 22 );
+    
+    o->cluster = ( uint16_t )( ( ( uint16_t )data[ 26 ] ) | ( ( uint16_t )data[ 27 ] << 8 ) );
     
     return o;
 }

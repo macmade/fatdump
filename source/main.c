@@ -246,18 +246,18 @@ int main( int argc, char * argv[] )
     if( ArgumentsGetShowDir( args ) )
     {
         {
-            DirRef              dir;
-            DirEntryRef         entry;
-            size_t              entries;
-            size_t              i;
-            size_t              j;
-            size_t              k;
-            size_t              cols;
-            size_t              n;
-            DirEntryAttributes  attributes;
-            time_t              t;
-            char                s[ 20 ];
-            struct tm         * tm;
+            DirRef      dir;
+            DirEntryRef entry;
+            size_t      entries;
+            size_t      i;
+            size_t      j;
+            size_t      k;
+            size_t      cols;
+            size_t      n;
+            int         attributes;
+            time_t      t;
+            char        s[ 20 ];
+            struct tm * tm;
             
             dir     = DiskGetRootDirectory( disk );
             entries = DirGetEntryCount( dir );
@@ -282,7 +282,26 @@ int main( int argc, char * argv[] )
                         
                         if( j == 0 )
                         {
-                            printf( "%-4lu: %-44s", i + k + 1, DirEntryGetName( entry ) );
+                            if( DirEntryIsLFN( entry ) )
+                            {
+                                printf( "%-4lu: %-44s", i + k + 1, "LFN" );
+                            }
+                            else if( DirEntryGetCluster( entry ) == 0 )
+                            {
+                                printf( "%-4lu: %-44s", i + k + 1, "Free" );
+                            }
+                            else
+                            {
+                                printf( "%-4lu: %-44s", i + k + 1, DirEntryGetName( entry ) );
+                            }
+                        }
+                        else if( DirEntryIsLFN( entry ) )
+                        {
+                            printf( ".................................................." );
+                        }
+                        else if( DirEntryGetCluster( entry ) == 0 )
+                        {
+                            printf( "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" );
                         }
                         else if( j == 1 )
                         {
@@ -290,7 +309,7 @@ int main( int argc, char * argv[] )
                         }
                         else if( j == 2 )
                         {
-                            printf( "    - Cluster:                 0x%-17X", DirEntryGetCluster( entry ) );
+                            printf( "    - Cluster:                 %-19lu", ( unsigned long )DirEntryGetCluster( entry ) );
                         }
                         else if( j == 3 )
                         {
@@ -298,7 +317,7 @@ int main( int argc, char * argv[] )
                             tm = localtime( &t );
                             
                             strftime( s, sizeof( s ), "%Y/%m/%d %H:%M:%S", tm );
-                            printf( "    - Creation time:           %-19s", s );
+                            printf( "    - Creation time:           %-19s", ( t == 0 ) ? "-" : s );
                         }
                         else if( j == 4 )
                         {
@@ -306,7 +325,7 @@ int main( int argc, char * argv[] )
                             tm = localtime( &t );
                             
                             strftime( s, sizeof( s ), "%Y/%m/%d %H:%M:%S", tm );
-                            printf( "    - Last access time:        %-19s", s );
+                            printf( "    - Last access time:        %-19s", ( t == 0 ) ? "-" : s );
                         }
                         else if( j == 5 )
                         {
@@ -314,35 +333,35 @@ int main( int argc, char * argv[] )
                             tm = localtime( &t );
                             
                             strftime( s, sizeof( s ), "%Y/%m/%d %H:%M:%S", tm );
-                            printf( "    - Last modification time:  %-19s", s );
+                            printf( "    - Last modification time:  %-19s", ( t == 0 ) ? "-" : s );
                         }
                         else if( j == 6 )
                         {
-                            printf( "    - Read-only:               %-19s", ( attributes & DirEntryAttributeReadOnly  ) ? "yes" : "no" );
+                            printf( "    - Read-only:               %-19s", ( attributes & DirEntryAttributeReadOnly ) ? "yes" : "no" );
                         }
                         else if( j == 7 )
                         {
-                            printf( "    - Hidden:                  %-19s", ( attributes & DirEntryAttributeHidden  ) ? "yes" : "no" );
+                            printf( "    - Hidden:                  %-19s", ( attributes & DirEntryAttributeHidden ) ? "yes" : "no" );
                         }
                         else if( j == 8 )
                         {
-                            printf( "    - System:                  %-19s", ( attributes & DirEntryAttributeSystem  ) ? "yes" : "no" );
+                            printf( "    - System:                  %-19s", ( attributes & DirEntryAttributeSystem ) ? "yes" : "no" );
                         }
                         else if( j == 9 )
                         {
-                            printf( "    - Volume ID:               %-19s", ( attributes & DirEntryAttributeVolumeID  ) ? "yes" : "no" );
+                            printf( "    - Volume ID:               %-19s", ( attributes & DirEntryAttributeVolumeID ) ? "yes" : "no" );
                         }
                         else if( j == 10 )
                         {
-                            printf( "    - Directory:               %-19s", ( attributes & DirEntryAttributeDirectory  ) ? "yes" : "no" );
+                            printf( "    - Directory:               %-19s", ( attributes & DirEntryAttributeDirectory ) ? "yes" : "no" );
                         }
                         else if( j == 11 )
                         {
-                            printf( "    - Archive:                 %-19s", ( attributes & DirEntryAttributeArchive  ) ? "yes" : "no" );
+                            printf( "    - Archive:                 %-19s", ( attributes & DirEntryAttributeArchive ) ? "yes" : "no" );
                         }
                         else if( j == 12 )
                         {
-                            printf( "    - LFN:                     %-19s", ( attributes & DirEntryAttributeLFN  ) ? "yes" : "no" );
+                            printf( "    - LFN:                     %-19s", ( DirEntryIsLFN( entry ) ) ? "yes" : "no" );
                         }
                         
                         if( n > 1 && ( k + 1 ) % n )

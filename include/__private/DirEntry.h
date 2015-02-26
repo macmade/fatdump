@@ -82,17 +82,19 @@ extern "C" {
 
 struct __DirEntry
 {
-    uint8_t           * data;
-    size_t              dataSize;
-    DirRef              dir;
-    char              * name;
-    DirEntryAttributes  attributes;
-    time_t              creationTime;
-    time_t              lastAccessTime;
-    time_t              lastModificationTime;
-    uint16_t            cluster;
-    size_t              size;
+    uint8_t * data;
+    size_t    dataSize;
+    DirRef    dir;
+    char    * name;
+    int       attributes;
+    time_t    creationTime;
+    time_t    lastAccessTime;
+    time_t    lastModificationTime;
+    uint16_t  cluster;
+    size_t    size;
 };
+
+time_t __DirEntryTimeFromUInt16( uint8_t * dateData, uint8_t * timeData );
 
 #ifdef __clang__
 #pragma clang diagnostic pop

@@ -67,12 +67,12 @@
 #include "DirEntry.h"
 #include "__private/DirEntry.h"
 
-int DirEntryGetAttributes( DirEntryRef o )
+bool DirEntryIsLFN( DirEntryRef o )
 {
     if( o == NULL )
     {
-        return DirEntryAttributeUnknown;
+        return false;
     }
     
-    return o->attributes;
+    return o->attributes == DirEntryAttributeLFN;
 }
