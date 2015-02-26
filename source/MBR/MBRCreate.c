@@ -102,5 +102,7 @@ MutableMBRRef MBRCreate( FILE * fp )
     
     o->data = data;
     
+    __MBRCreateStrings( o );
+    
     return o;
 }
