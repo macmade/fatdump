@@ -124,7 +124,7 @@ MutableFATRef FATCreate( FILE * fp, DiskRef disk )
     {
         free( o );
         free( data );
-        fprintf( stderr, "Error: invalid read of MBR - Read %lu bytes, expected %lu\n", s, o->dataSize );
+        fprintf( stderr, "Error: invalid read of FAT - Read %lu bytes, expected %lu\n", s, o->dataSize );
         
         return NULL;
     }
