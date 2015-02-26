@@ -78,6 +78,7 @@ typedef       struct __Disk * MutableDiskRef;
 #include "MBR.h"
 #include "FAT.h"
 #include "Dir.h"
+#include "DirEntry.h"
 
 typedef enum
 {
@@ -90,7 +91,7 @@ DiskFormat;
 MutableDiskRef  DiskCreate( const char * path );
 void            DiskDelete( MutableDiskRef o );
 
-void          * DiskCreateFileDataForCluster( DiskRef o, uint16_t cluster, size_t * size );
+void          * DiskCreateFileDataForEntry( DiskRef o, DirEntryRef entry, size_t * size );
 
 MBRRef          DiskGetMBR( DiskRef o );
 FATRef          DiskGetFAT( DiskRef o );

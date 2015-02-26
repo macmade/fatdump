@@ -74,5 +74,5 @@ void * DirEntryCreateFileData( DirEntryRef o, size_t * size )
         return NULL;
     }
     
-    return DiskCreateFileDataForCluster( DirGetDisk( o->dir ), o->cluster, size );
+    return DiskCreateFileDataForEntry( DirGetDisk( o->dir ), o, size );
 }

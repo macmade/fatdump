@@ -67,23 +67,31 @@
 #include "Disk.h"
 #include "__private/Disk.h"
 
-void * DiskCreateFileDataForCluster( DiskRef o, uint16_t cluster, size_t * size )
+void * DiskCreateFileDataForEntry( DiskRef o, DirEntryRef entry, size_t * size )
 {
     uint8_t * data;
+    uint16_t  cluster;
+    size_t    s;
     
     if( o == NULL )
     {
         return NULL;
     }
     
-    ( void )cluster;
+    cluster = DirEntryGetCluster( entry );
+    s       = DirEntryGetSize( entry );
+    
+    if( s == 0 )
+    {
+        return NULL;
+    }
     
     if( size != NULL )
     {
-        *( size ) = 256;
+        *( size ) = s;
     }
     
-    data = malloc( 256 );
+    data = malloc( s );
     
     return data;
 }
