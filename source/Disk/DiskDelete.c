@@ -74,6 +74,11 @@ void DiskDelete( MutableDiskRef o )
         return;
     }
     
+    if( o->fp != NULL )
+    {
+        fclose( o->fp );
+    }
+    
     MBRDelete( o->mbr );
     FATDelete( o->fat );
     DirDelete( o->dir );

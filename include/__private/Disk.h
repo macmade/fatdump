@@ -88,6 +88,8 @@ struct __Disk
     MutableFATRef   fat;
     MutableDirRef   dir;
     DiskFormat      format;
+    FILE          * fp;
+    long            dataRegion;
 };
 
 #ifdef __clang__

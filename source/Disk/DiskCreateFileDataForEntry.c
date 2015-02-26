@@ -70,16 +70,28 @@
 void * DiskCreateFileDataForEntry( DiskRef o, DirEntryRef entry, size_t * size )
 {
     uint8_t * data;
+    uint8_t * tempData;
     uint16_t  cluster;
+    size_t    entrySize;
     size_t    s;
+    size_t    r;
+    size_t    bytesPerCluster;
+    long      offset;
+    
+    if( size != NULL )
+    {
+        *( size ) = 0;
+    }
     
     if( o == NULL )
     {
         return NULL;
     }
     
-    cluster = DirEntryGetCluster( entry );
-    s       = DirEntryGetSize( entry );
+    if( o->fp == NULL || o->dataRegion <= 0 )
+    {
+        return NULL;
+    }
     
     if
     (
@@ -91,24 +103,76 @@ void * DiskCreateFileDataForEntry( DiskRef o, DirEntryRef entry, size_t * size )
         return NULL;
     }
     
-    if( s == 0 )
+    cluster   = DirEntryGetCluster( entry );
+    entrySize = DirEntryGetSize( entry );
+    
+    if
+    (
+           FATGetClusterTypeForEntry( o->fat, cluster ) != FATClusterTypeUsed
+        && FATGetClusterTypeForEntry( o->fat, cluster ) != FATClusterTypeLast
+    )
     {
         return NULL;
     }
     
-    data = calloc( 1, s );
+    if( entrySize == 0 || cluster < 2 )
+    {
+        return NULL;
+    }
+    
+    data = calloc( 1, entrySize );
     
     if( data == NULL )
     {
         return NULL;
     }
     
-    if( size != NULL )
+    tempData        = data;
+    s               = entrySize;
+    bytesPerCluster = MBRGetSectorsPerCluster( o->mbr ) * MBRGetBytesPerSector( o->mbr );
+    
+    while( 1 )
     {
-        *( size ) = s;
+        offset = o->dataRegion + ( ( cluster - 2 ) * ( long )bytesPerCluster );
+        
+        fseek( o->fp, offset, SEEK_SET );
+        
+        if( s > bytesPerCluster )
+        {
+            r = fread( tempData, 1, bytesPerCluster, o->fp );
+            
+            if( r != bytesPerCluster )
+            {
+                return NULL;
+            }
+        }
+        else
+        {
+            r = fread( tempData, 1, s, o->fp );
+            
+            if( r != s )
+            {
+                return NULL;
+            }
+        }
+        
+        tempData += r;
+        s        -= r;
+        
+        if( FATGetClusterTypeForEntry( o->fat, cluster ) == FATClusterTypeLast )
+        {
+            break;
+        }
+        else
+        {
+            cluster = FATGetClusterForEntry( o->fat, cluster );
+        }
     }
     
-    
+    if( size != NULL )
+    {
+        *( size ) = entrySize;
+    }
     
     return data;
 }

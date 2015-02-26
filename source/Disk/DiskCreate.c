@@ -166,9 +166,12 @@ MutableDiskRef DiskCreate( const char * path )
         return NULL;
     }
     
-    o->dir = dir;
+    o->dir        = dir;
+    o->dataRegion = ftell( fp );
     
-    fclose( fp );
+    fseek( fp, 0, SEEK_SET );
+    
+    o->fp  = fp;
     
     return o;
 }
