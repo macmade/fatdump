@@ -79,12 +79,12 @@ typedef       struct __MBR * MutableMBRRef;
 MutableMBRRef   MBRCreate( FILE * fp );
 void            MBRDelete( MutableMBRRef o );
 
-const void *    MBRGetData( MBRRef o );
+const void    * MBRGetData( MBRRef o );
 size_t          MBRGetDataSize( MBRRef o );
 
 bool            MBRIsBootable( MBRRef o );
 
-const char *    MBRGetOEMID( MBRRef o );
+const char    * MBRGetOEMID( MBRRef o );
 uint16_t        MBRGetBytesPerSector( MBRRef o );
 uint8_t         MBRGetSectorsPerCluster( MBRRef o );
 uint16_t        MBRGetReservedSectors( MBRRef o );
@@ -100,8 +100,8 @@ uint32_t        MBRGetLBASectors( MBRRef o );
 uint8_t         MBRGetDriveNumber( MBRRef o );
 uint8_t         MBRGetExtendedBootSignature( MBRRef o );
 uint32_t        MBRGetVolumeSerialNumber( MBRRef o );
-const char *    MBRGetVolumeLabel( MBRRef o );
-const char *    MBRGetFileSystem( MBRRef o );
+const char    * MBRGetVolumeLabel( MBRRef o );
+const char    * MBRGetFileSystem( MBRRef o );
 uint16_t        MBRGetBootSignature( MBRRef o );
 
 #ifdef __cplusplus

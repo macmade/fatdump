@@ -90,7 +90,7 @@ FATClusterType;
 MutableFATRef   FATCreate( FILE * fp, DiskRef disk );
 void            FATDelete( MutableFATRef o );
 
-const void *    FATGetData( FATRef o );
+const void    * FATGetData( FATRef o );
 size_t          FATGetDataSize( FATRef o );
 
 size_t          FATGetEntryCount( FATRef o );

@@ -80,7 +80,7 @@ typedef       struct __Dir * MutableDirRef;
 MutableDirRef   DirCreate( FILE * fp, DiskRef disk );
 void            DirDelete( MutableDirRef o );
 
-const void *    DirGetData( DirRef o );
+const void    * DirGetData( DirRef o );
 size_t          DirGetDataSize( DirRef o );
 
 #ifdef __cplusplus
