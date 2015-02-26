@@ -71,6 +71,7 @@ MutableMBRRef MBRCreate( FILE * fp )
 {
     struct __MBR     * o;
     struct __MBRData * data;
+    size_t             s;
     
     if( fp == NULL )
     {
@@ -90,12 +91,13 @@ MutableMBRRef MBRCreate( FILE * fp )
         return NULL;
     }
     
-    if( fread( data, 1, sizeof( struct __MBRData ), fp ) != sizeof( struct __MBRData ) )
+    s = fread( data, 1, sizeof( struct __MBRData ), fp );
+    
+    if( s != sizeof( struct __MBRData ) )
     {
         free( o );
         free( data );
-        fclose( fp );
-        fprintf( stderr, "Error: invalid read of file\n" );
+        fprintf( stderr, "Error: invalid read of MBR - Read %lu bytes, expecting %lu\n", s, sizeof( struct __MBRData ) );
         
         return NULL;
     }

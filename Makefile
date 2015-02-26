@@ -76,7 +76,7 @@ FILES   := $(call XEOS_FUNC_C_FILES,$(DIR_SRC))               \
            $(call XEOS_FUNC_C_FILES,$(DIR_SRC)IO/)            \
            $(call XEOS_FUNC_C_FILES,$(DIR_SRC)MBR/)           \
            $(call XEOS_FUNC_C_FILES,$(DIR_SRC)Print/)         \
-           $(call XEOS_FUNC_C_FILES,$(DIR_SRC)RootDirectory/)
+           $(call XEOS_FUNC_C_FILES,$(DIR_SRC)Dir/)
 
 all: tool-build
 	

@@ -64,15 +64,27 @@
  * @copyright       (c) 2010-2015, Jean-David Gadina - www.xs-labs.com
  */
 
-#include "MBR.h"
-#include "__private/MBR.h"
+#ifndef FATDUMP_DIR_H
+#define FATDUMP_DIR_H
 
-const void * MBRGetMBRData( MBRRef o )
-{
-    if( o == NULL )
-    {
-        return NULL;
-    }
-    
-    return o->data;
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "C99.h"
+#include "MBR.h"
+
+typedef const struct __Dir * DirRef;
+typedef       struct __Dir * MutableDirRef;
+
+MutableDirRef   DirCreate( FILE * fp, MBRRef mbr );
+void            DirDelete( MutableDirRef o );
+
+const void *    DirGetData( DirRef o );
+size_t          DirGetDataSize( DirRef o );
+
+#ifdef __cplusplus
 }
+#endif
+
+#endif /* FATDUMP_DIR_H */

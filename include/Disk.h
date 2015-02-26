@@ -73,6 +73,8 @@ extern "C" {
 
 #include "C99.h"
 #include "MBR.h"
+#include "FAT.h"
+#include "Dir.h"
 
 typedef const struct __Disk * DiskRef;
 typedef       struct __Disk * MutableDiskRef;
@@ -81,6 +83,8 @@ MutableDiskRef  DiskCreate( const char * path );
 void            DiskDelete( MutableDiskRef o );
 
 MBRRef          DiskGetMBR( DiskRef o );
+FATRef          DiskGetFAT( DiskRef o );
+DirRef          DiskGetRootDirectory( DiskRef o );
 
 #ifdef __cplusplus
 }

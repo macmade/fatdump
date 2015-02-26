@@ -64,31 +64,26 @@
  * @copyright       (c) 2010-2015, Jean-David Gadina - www.xs-labs.com
  */
 
-#ifndef FATDUMP___PRIVATE_ROOT_DIRECTORY_H
-#define FATDUMP___PRIVATE_ROOT_DIRECTORY_H
+#include "Dir.h"
+#include "__private/Dir.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include "C99.h"
-
-#ifdef __clang__
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpadded"
-#endif
-
-struct __RootDirectory
+MutableDirRef DirCreate( FILE * fp, MBRRef mbr )
 {
-    int x;
-};
-
-#ifdef __clang__
-#pragma clang diagnostic pop
-#endif
-
-#ifdef __cplusplus
+    struct __Dir * o;
+    
+    if( fp == NULL || mbr == NULL )
+    {
+        return NULL;
+    }
+    
+    o = calloc( sizeof( struct __Dir ), 1 );
+    
+    if( o == NULL )
+    {
+        fprintf( stderr, "Error: out of memory.\n" );
+        
+        return NULL;
+    }
+    
+    return o;
 }
-#endif
-
-#endif /* FATDUMP___PRIVATE_ROOT_DIRECTORY_H */

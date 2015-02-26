@@ -64,27 +64,15 @@
  * @copyright       (c) 2010-2015, Jean-David Gadina - www.xs-labs.com
  */
 
-#ifndef FATDUMP_ROOT_DIRECTORY_H
-#define FATDUMP_ROOT_DIRECTORY_H
+#include "Dir.h"
+#include "__private/Dir.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include "C99.h"
-#include "MBR.h"
-
-typedef const struct __RootDirectory * RootDirectoryRef;
-typedef       struct __RootDirectory * MutableRootDirectoryRef;
-
-RootDirectoryRef    RootDirectoryCreate( FILE * fp, MBRRef mbr );
-void                RootDirectoryDelete( MutableRootDirectoryRef o );
-
-const void *        RootDirectoryGetData( RootDirectoryRef o );
-size_t              RootDirectoryGetDataSize( RootDirectoryRef o );
-
-#ifdef __cplusplus
+size_t DirGetDataSize( DirRef o )
+{
+    if( o == NULL )
+    {
+        return 0;
+    }
+    
+    return 0;
 }
-#endif
-
-#endif /* FATDUMP_ROOT_DIRECTORY_H */

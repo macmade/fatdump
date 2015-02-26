@@ -64,15 +64,15 @@
  * @copyright       (c) 2010-2015, Jean-David Gadina - www.xs-labs.com
  */
 
-#include "MBR.h"
-#include "__private/MBR.h"
+#include "FAT.h"
+#include "__private/FAT.h"
 
-size_t MBRGetMBRDataSize( MBRRef o )
+size_t FATGetDataSize( FATRef o )
 {
     if( o == NULL )
     {
         return 0;
     }
     
-    return sizeof( struct __MBRData );
+    return 0;
 }

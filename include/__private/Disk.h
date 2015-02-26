@@ -73,6 +73,8 @@ extern "C" {
 
 #include "C99.h"
 #include "MBR.h"
+#include "FAT.h"
+#include "Dir.h"
 
 #ifdef __clang__
 #pragma clang diagnostic push
@@ -82,6 +84,8 @@ extern "C" {
 struct __Disk
 {
     MutableMBRRef mbr;
+    MutableFATRef fat;
+    MutableDirRef dir;
 };
 
 #ifdef __clang__

@@ -70,7 +70,7 @@
 #include "Disk.h"
 #include "MBR.h"
 #include "FAT.h"
-#include "RootDirectory.h"
+#include "Dir.h"
 
 int main( int argc, char * argv[] )
 {
@@ -167,6 +167,10 @@ int main( int argc, char * argv[] )
     if( ArgumentsGetShowFAT( args ) )
     {
         {
+            FATRef fat;
+            
+            fat = DiskGetFAT( disk );
+            
             PrintHeader( "FAT:" );
         }
     }
@@ -174,13 +178,22 @@ int main( int argc, char * argv[] )
     if( ArgumentsGetShowRawFAT( args ) )
     {
         {
+            FATRef fat;
+            
+            fat = DiskGetFAT( disk );
+            
             PrintHeader( "FAT raw data:" );
+            PrintData( FATGetData( fat ), FATGetDataSize( fat ) );
         }
     }
     
     if( ArgumentsGetShowDir( args ) )
     {
         {
+            DirRef dir;
+            
+            dir = DiskGetRootDirectory( disk );
+            
             PrintHeader( "Root directory:" );
         }
     }
@@ -188,7 +201,12 @@ int main( int argc, char * argv[] )
     if( ArgumentsGetShowRawDir( args ) )
     {
         {
+            DirRef dir;
+            
+            dir = DiskGetRootDirectory( disk );
+            
             PrintHeader( "Root directory raw data:" );
+            PrintData( DirGetData( dir ), DirGetDataSize( dir ) );
         }
     }
     

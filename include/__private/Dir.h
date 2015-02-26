@@ -64,69 +64,31 @@
  * @copyright       (c) 2010-2015, Jean-David Gadina - www.xs-labs.com
  */
 
-#include "Disk.h"
-#include "__private/Disk.h"
+#ifndef FATDUMP___PRIVATE_DIR_H
+#define FATDUMP___PRIVATE_DIR_H
 
-MutableDiskRef DiskCreate( const char * path )
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "C99.h"
+
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpadded"
+#endif
+
+struct __Dir
 {
-    FILE          * fp;
-    struct __Disk * o;
-    MutableMBRRef   mbr;
-    MutableFATRef   fat;
-    MutableDirRef   dir;
-    size_t          i;
-    
-    if( path == NULL )
-    {
-        return NULL;
-    }
-    
-    fp   = fopen( path, "rb" );
-    o    = calloc( sizeof( struct __Disk ), 1 );
-    
-    if( fp == NULL )
-    {
-        free( o );
-        fprintf( stderr, "Error: cannot open file for reading (%s).\n", path );
-        
-        return NULL;
-    }
-    
-    if( o == NULL )
-    {
-        fclose( fp );
-        fprintf( stderr, "Error: out of memory.\n" );
-        
-        return NULL;
-    }
-    
-    mbr = MBRCreate( fp );
-    fat = FATCreate( fp, mbr );
-    
-    for( i = 1; i < MBRGetNumberOfFATs( mbr ); i++ )
-    {
-        fseek( fp, ( long )MBRGetDataSize( mbr ), SEEK_CUR );
-    }
-    
-    dir = DirCreate( fp, mbr );
-    
-    if( mbr == NULL || fat == NULL || dir == NULL )
-    {
-        MBRDelete( mbr );
-        FATDelete( fat );
-        DirDelete( dir );
-        
-        free( o );
-        fclose( fp );
-        
-        return NULL;
-    }
-    
-    o->mbr = mbr;
-    o->fat = fat;
-    o->dir = dir;
-    
-    fclose( fp );
-    
-    return o;
+    int x;
+};
+
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+
+#ifdef __cplusplus
 }
+#endif
+
+#endif /* FATDUMP___PRIVATE_DIR_H */

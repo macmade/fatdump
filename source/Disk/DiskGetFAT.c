@@ -67,66 +67,12 @@
 #include "Disk.h"
 #include "__private/Disk.h"
 
-MutableDiskRef DiskCreate( const char * path )
+FATRef DiskGetFAT( DiskRef o )
 {
-    FILE          * fp;
-    struct __Disk * o;
-    MutableMBRRef   mbr;
-    MutableFATRef   fat;
-    MutableDirRef   dir;
-    size_t          i;
-    
-    if( path == NULL )
-    {
-        return NULL;
-    }
-    
-    fp   = fopen( path, "rb" );
-    o    = calloc( sizeof( struct __Disk ), 1 );
-    
-    if( fp == NULL )
-    {
-        free( o );
-        fprintf( stderr, "Error: cannot open file for reading (%s).\n", path );
-        
-        return NULL;
-    }
-    
     if( o == NULL )
     {
-        fclose( fp );
-        fprintf( stderr, "Error: out of memory.\n" );
-        
         return NULL;
     }
     
-    mbr = MBRCreate( fp );
-    fat = FATCreate( fp, mbr );
-    
-    for( i = 1; i < MBRGetNumberOfFATs( mbr ); i++ )
-    {
-        fseek( fp, ( long )MBRGetDataSize( mbr ), SEEK_CUR );
-    }
-    
-    dir = DirCreate( fp, mbr );
-    
-    if( mbr == NULL || fat == NULL || dir == NULL )
-    {
-        MBRDelete( mbr );
-        FATDelete( fat );
-        DirDelete( dir );
-        
-        free( o );
-        fclose( fp );
-        
-        return NULL;
-    }
-    
-    o->mbr = mbr;
-    o->fat = fat;
-    o->dir = dir;
-    
-    fclose( fp );
-    
-    return o;
+    return o->fat;
 }
