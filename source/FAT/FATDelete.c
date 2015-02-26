@@ -74,5 +74,6 @@ void FATDelete( MutableFATRef o )
         return;
     }
     
+    free( o->data );
     free( o );
 }

@@ -74,5 +74,6 @@ void DirDelete( MutableDirRef o )
         return;
     }
     
+    free( o->data );
     free( o );
 }

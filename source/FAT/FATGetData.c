@@ -74,5 +74,5 @@ const void * FATGetData( FATRef o )
         return NULL;
     }
     
-    return NULL;
+    return o->data;
 }

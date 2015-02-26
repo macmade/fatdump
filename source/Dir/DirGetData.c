@@ -74,5 +74,5 @@ const void * DirGetData( DirRef o )
         return NULL;
     }
     
-    return NULL;
+    return o->data;
 }

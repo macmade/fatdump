@@ -74,5 +74,5 @@ size_t DirGetDataSize( DirRef o )
         return 0;
     }
     
-    return 0;
+    return o->dataSize;
 }

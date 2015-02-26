@@ -80,7 +80,8 @@ extern "C" {
 
 struct __Dir
 {
-    int x;
+    uint8_t * data;
+    size_t    dataSize;
 };
 
 #ifdef __clang__
