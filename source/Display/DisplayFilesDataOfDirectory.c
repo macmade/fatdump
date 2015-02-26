@@ -69,12 +69,13 @@
 
 void DisplayFilesDataOfDirectory( DirRef dir, bool showHidden, bool showDeleted )
 {
-    DirEntryRef entry;
-    size_t      entries;
-    size_t      i;
-    size_t      c;
-    size_t      s;
-    void      * data;
+    MutableDirRef subDir;
+    DirEntryRef   entry;
+    size_t        entries;
+    size_t        i;
+    size_t        c;
+    size_t        s;
+    void        * data;
     
     if( dir == NULL )
     {
@@ -93,7 +94,6 @@ void DisplayFilesDataOfDirectory( DirRef dir, bool showHidden, bool showDeleted 
                DirEntryIsLFN( entry )
             || DirEntryIsFree( entry )
             || DirEntryIsVolumeID( entry )
-            || DirEntryIsDirectory( entry )
             || ( DirEntryIsHidden( entry )  && showHidden  == false )
             || ( DirEntryIsDeleted( entry ) && showDeleted == false )
         )
@@ -101,14 +101,40 @@ void DisplayFilesDataOfDirectory( DirRef dir, bool showHidden, bool showDeleted 
             continue;
         }
         
-        data = DirEntryCreateFileData( entry, &s );
-        
-        if( data != NULL )
+        if( DirEntryIsDirectory( entry ) )
         {
-            PrintHeader( "Data for file: %s - %lu bytes", DirEntryGetFilename( entry ), ( unsigned long )s );
-            PrintData( data, s );
+            subDir = DirCreateFromDirEntry( DirGetDisk( dir ), entry );
+            
+            if( subDir == NULL )
+            {
+                continue;
+            }
+            else if
+            (
+                   strcmp( DirEntryGetFilename( entry ), "."  ) == 0
+                || strcmp( DirEntryGetFilename( entry ), ".." ) == 0
+            )
+            {
+                continue;
+            }
+            else
+            {
+                DisplayFilesDataOfDirectory( subDir, showHidden, showDeleted );
+            }
+            
+            DirDelete( subDir );
         }
-        
-        free( data );
+        else
+        {
+            data = DirEntryCreateFileData( entry, &s );
+            
+            if( data != NULL )
+            {
+                PrintHeader( "Data for file: %s - %lu bytes", DirEntryGetFilename( entry ), ( unsigned long )s );
+                PrintData( data, s );
+            }
+            
+            free( data );
+        }
     }
 }
