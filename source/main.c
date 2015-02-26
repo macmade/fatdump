@@ -64,12 +64,62 @@
  * @copyright       (c) 2010-2015, Jean-David Gadina - www.xs-labs.com
  */
 
-#include "C99.h"
+#include "Arguments.h"
+#include "Help.h"
+#include "MBR.h"
+#include "Disk.h"
 
 int main( int argc, char * argv[] )
 {
-    ( void )argc;
-    ( void )argv;
+    MutableArgumentsRef args;
+    MBRRef              mbr;
+    MutableDiskRef      disk;
+    int                 ret;
     
-    return EXIT_SUCCESS;
+    args = ArgumentsCreate( argc, ( const char ** )argv );
+    mbr  = NULL;
+    disk = NULL;
+    
+    if( ArgumentsGetShowHelp( args ) )
+    {
+        HelpDisplay();
+        
+        goto success;
+    }
+    
+    if( ArgumentsValidate( args ) == false )
+    {
+        goto failure;
+    }
+    
+    disk = DiskCreate( ArgumentsGetDiskPath( args ) );
+    
+    if( disk == NULL )
+    {
+        goto failure;
+    }
+    
+    mbr = DiskGetMBR( disk );
+    
+    if( mbr == NULL )
+    {
+        goto failure;
+    }
+    
+    success:
+    
+        ret = EXIT_SUCCESS;
+        
+        goto cleanup;
+        
+    failure:
+        
+        ret = EXIT_FAILURE;
+        
+    cleanup:
+    
+    DiskDelete( disk );
+    ArgumentsDelete( args );
+    
+    return ret;
 }
