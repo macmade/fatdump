@@ -90,6 +90,8 @@ DiskFormat;
 MutableDiskRef  DiskCreate( const char * path );
 void            DiskDelete( MutableDiskRef o );
 
+void          * DiskCreateFileDataForCluster( DiskRef o, uint16_t cluster, size_t * size );
+
 MBRRef          DiskGetMBR( DiskRef o );
 FATRef          DiskGetFAT( DiskRef o );
 DirRef          DiskGetRootDirectory( DiskRef o );

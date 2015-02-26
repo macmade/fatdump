@@ -64,50 +64,15 @@
  * @copyright       (c) 2010-2015, Jean-David Gadina - www.xs-labs.com
  */
 
-#include "Display.h"
-#include "Print.h"
+#include "DirEntry.h"
+#include "__private/DirEntry.h"
 
-void DisplayFilesDataOfDirectory( DirRef dir, bool showHidden )
+void * DirEntryCreateFileData( DirEntryRef o, size_t * size )
 {
-    DirEntryRef entry;
-    size_t      entries;
-    size_t      i;
-    size_t      c;
-    size_t      s;
-    void      * data;
-    
-    if( dir == NULL )
+    if( o == NULL )
     {
-        return;
+        return NULL;
     }
     
-    c       = PrintGetAvailableColumns();
-    entries = DirGetEntryCount( dir );
-    
-    for( i = 0; i < entries; i++ )
-    {
-        entry = DirGetEntry( dir, i );
-        
-        if
-        (
-               DirEntryIsLFN( entry )
-            || DirEntryIsFree( entry )
-            || DirEntryIsVolumeID( entry )
-            || DirEntryIsDirectory( entry )
-            || ( DirEntryIsHidden( entry ) && !showHidden )
-        )
-        {
-            continue;
-        }
-        
-        data = DirEntryCreateFileData( entry, &s );
-        
-        if( data != NULL )
-        {
-            PrintHeader( "Data for file: %s", DirEntryGetFilename( entry ) );
-            PrintData( data, s );
-        }
-        
-        free( data );
-    }
+    return DiskCreateFileDataForCluster( DirGetDisk( o->dir ), o->cluster, size );
 }

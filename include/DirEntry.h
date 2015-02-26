@@ -94,6 +94,7 @@ void                DirEntryDelete( MutableDirEntryRef o );
 
 const void        * DirEntryGetData( DirEntryRef o );
 size_t              DirEntryGetDataSize( DirEntryRef o );
+void              * DirEntryCreateFileData( DirEntryRef o, size_t * size );
 
 bool                DirEntryIsFree( DirEntryRef o );
 bool                DirEntryIsReadOnly( DirEntryRef o );
@@ -112,7 +113,6 @@ time_t              DirEntryGetLastAccessTime( DirEntryRef o );
 time_t              DirEntryGetLastModificationTime( DirEntryRef o );
 uint16_t            DirEntryGetCluster( DirEntryRef o );
 size_t              DirEntryGetSize( DirEntryRef o );
-
 
 #ifdef __cplusplus
 }

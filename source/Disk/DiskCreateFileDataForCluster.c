@@ -64,50 +64,26 @@
  * @copyright       (c) 2010-2015, Jean-David Gadina - www.xs-labs.com
  */
 
-#include "Display.h"
-#include "Print.h"
+#include "Disk.h"
+#include "__private/Disk.h"
 
-void DisplayFilesDataOfDirectory( DirRef dir, bool showHidden )
+void * DiskCreateFileDataForCluster( DiskRef o, uint16_t cluster, size_t * size )
 {
-    DirEntryRef entry;
-    size_t      entries;
-    size_t      i;
-    size_t      c;
-    size_t      s;
-    void      * data;
+    uint8_t * data;
     
-    if( dir == NULL )
+    if( o == NULL )
     {
-        return;
+        return NULL;
     }
     
-    c       = PrintGetAvailableColumns();
-    entries = DirGetEntryCount( dir );
+    ( void )cluster;
     
-    for( i = 0; i < entries; i++ )
+    if( size != NULL )
     {
-        entry = DirGetEntry( dir, i );
-        
-        if
-        (
-               DirEntryIsLFN( entry )
-            || DirEntryIsFree( entry )
-            || DirEntryIsVolumeID( entry )
-            || DirEntryIsDirectory( entry )
-            || ( DirEntryIsHidden( entry ) && !showHidden )
-        )
-        {
-            continue;
-        }
-        
-        data = DirEntryCreateFileData( entry, &s );
-        
-        if( data != NULL )
-        {
-            PrintHeader( "Data for file: %s", DirEntryGetFilename( entry ) );
-            PrintData( data, s );
-        }
-        
-        free( data );
+        *( size ) = 256;
     }
+    
+    data = malloc( 256 );
+    
+    return data;
 }

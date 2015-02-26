@@ -83,6 +83,7 @@ void            DirDelete( MutableDirRef o );
 
 const void    * DirGetData( DirRef o );
 size_t          DirGetDataSize( DirRef o );
+DiskRef         DirGetDisk( DirRef o );
 
 size_t          DirGetEntryCount( DirRef o );
 DirEntryRef     DirGetEntry( DirRef o, size_t entry );
