@@ -64,8 +64,8 @@
  * @copyright       (c) 2010-2015, Jean-David Gadina - www.xs-labs.com
  */
 
-#ifndef MKFAT_C99_H
-#define MKFAT_C99_H
+#ifndef FATDUMP_C99_H
+#define FATDUMP_C99_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -81,4 +81,4 @@ extern "C" {
 }
 #endif
 
-#endif /* MKFAT_C99_H */
+#endif /* FATDUMP_C99_H */
