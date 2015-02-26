@@ -87,6 +87,7 @@ struct __Arguments
     bool         showRawFAT;
     bool         showDir;
     bool         showRawDir;
+    bool         showHidden;
     const char * diskPath;
 };
 

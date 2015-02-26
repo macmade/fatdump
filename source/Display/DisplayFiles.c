@@ -64,78 +64,17 @@
  * @copyright       (c) 2010-2015, Jean-David Gadina - www.xs-labs.com
  */
 
-#include "DirEntry.h"
-#include "__private/DirEntry.h"
+#include "Display.h"
+#include "Print.h"
 
-MutableDirEntryRef DirEntryCreate( FILE * fp, DirRef dir )
+void DisplayFiles( DiskRef disk, bool showHidden )
 {
-    struct __DirEntry * o;
-    uint8_t           * data;
-    char              * name;
-    char              * filename;
-    size_t              s;
-    
-    if( fp == NULL || dir == NULL )
+    if( disk == NULL )
     {
-        return NULL;
+        return;
     }
     
-    s        = 32;
-    o        = calloc( sizeof( struct __DirEntry ), 1 );
-    data     = malloc( s );
-    name     = calloc( 1, 12 );
-    filename = calloc( 1, 13 );
-    
-    if( o == NULL || data == NULL || name == NULL || filename == NULL )
-    {
-        free( o );
-        free( data );
-        free( name );
-        free( filename );
-        fprintf( stderr, "Error: out of memory.\n" );
-        
-        return NULL;
-    }
-    
-    o->dataSize = s;
-    o->data     = data;
-    o->name     = name;
-    o->filename = filename;
-    o->dir      = dir;
-    
-    s = fread( o->data, 1, o->dataSize, fp );
-    
-    if( s != o->dataSize )
-    {
-        free( o );
-        free( data );
-        free( name );
-        free( filename );
-        fprintf( stderr, "Error: invalid read of directory entry - Read %lu bytes, expected %lu\n", s, o->dataSize );
-        
-        return NULL;
-    }
-    
-    o->attributes = ( int )( data[ 11 ] );
-    
-    if( o->attributes == DirEntryAttributeLFN )
-    {
-        return o;
-    }
-    
-    memcpy( o->name, data, 11 );
-    __DirEntryFilename( o->name, o->filename );
-    
-    o->size = ( ( size_t )data[ 28 ] <<  0 )
-            | ( ( size_t )data[ 29 ] <<  8 )
-            | ( ( size_t )data[ 31 ] << 16 )
-            | ( ( size_t )data[ 30 ] << 24 );
-    
-    o->creationTime         = __DirEntryTimeFromUInt16( data + 16, data + 14 );
-    o->lastAccessTime       = __DirEntryTimeFromUInt16( data + 18, NULL );
-    o->lastModificationTime = __DirEntryTimeFromUInt16( data + 24, data + 22 );
-    
-    o->cluster = ( uint16_t )( ( ( uint16_t )data[ 26 ] ) | ( ( uint16_t )data[ 27 ] << 8 ) );
-    
-    return o;
+    PrintHeader( "Files in volume: %s", MBRGetVolumeLabel( DiskGetMBR( disk ) ) );
+    DisplayFilesOfDirectory( DiskGetRootDirectory( disk ), showHidden, 0 );
+    PrintLine();
 }

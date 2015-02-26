@@ -27,6 +27,7 @@ Usage
         --fat-raw  Prints raw FAT data
         --dir      Prints root directory infos
         --dir-raw  Prints raw root directory data
+        --hidden   Displays hidden file and folders
         -h         Prints this help message
     
     Example:

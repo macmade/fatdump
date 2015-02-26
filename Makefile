@@ -72,6 +72,7 @@ FILES   := $(call XEOS_FUNC_C_FILES,$(DIR_SRC))             \
            $(call XEOS_FUNC_C_FILES,$(DIR_SRC)Arguments/)   \
            $(call XEOS_FUNC_C_FILES,$(DIR_SRC)Dir/)         \
            $(call XEOS_FUNC_C_FILES,$(DIR_SRC)DirEntry/)    \
+           $(call XEOS_FUNC_C_FILES,$(DIR_SRC)Display/)     \
            $(call XEOS_FUNC_C_FILES,$(DIR_SRC)Disk/)        \
            $(call XEOS_FUNC_C_FILES,$(DIR_SRC)FAT/)         \
            $(call XEOS_FUNC_C_FILES,$(DIR_SRC)Help/)        \

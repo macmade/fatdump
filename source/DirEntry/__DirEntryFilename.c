@@ -67,75 +67,46 @@
 #include "DirEntry.h"
 #include "__private/DirEntry.h"
 
-MutableDirEntryRef DirEntryCreate( FILE * fp, DirRef dir )
+void __DirEntryFilename( const char * name, char * buf )
 {
-    struct __DirEntry * o;
-    uint8_t           * data;
-    char              * name;
-    char              * filename;
-    size_t              s;
+    size_t i;
+    size_t n;
     
-    if( fp == NULL || dir == NULL )
+    if( name == NULL || buf == NULL )
     {
-        return NULL;
+        return;
     }
     
-    s        = 32;
-    o        = calloc( sizeof( struct __DirEntry ), 1 );
-    data     = malloc( s );
-    name     = calloc( 1, 12 );
-    filename = calloc( 1, 13 );
+    memset( buf, 0, 13 );
     
-    if( o == NULL || data == NULL || name == NULL || filename == NULL )
+    n = 7;
+    
+    for( i = 8; i > 0; i-- )
     {
-        free( o );
-        free( data );
-        free( name );
-        free( filename );
-        fprintf( stderr, "Error: out of memory.\n" );
+        if( name[ i - 1 ] == ' ' )
+        {
+            n--;
+        }
+        else
+        {
+            buf[ n-- ] = name[ i - 1 ];
+        }
+    }
+    
+    n = strlen( buf );
+    
+    if( name[ 8 ] != ' ' )
+    {
+        buf[ n++ ] = '.';
         
-        return NULL;
+        for( i = 8; i < 11; i++ )
+        {
+            if( name[ i ] == ' ' )
+            {
+                break;
+            }
+            
+            buf[ n++ ] = name[ i ];
+        }
     }
-    
-    o->dataSize = s;
-    o->data     = data;
-    o->name     = name;
-    o->filename = filename;
-    o->dir      = dir;
-    
-    s = fread( o->data, 1, o->dataSize, fp );
-    
-    if( s != o->dataSize )
-    {
-        free( o );
-        free( data );
-        free( name );
-        free( filename );
-        fprintf( stderr, "Error: invalid read of directory entry - Read %lu bytes, expected %lu\n", s, o->dataSize );
-        
-        return NULL;
-    }
-    
-    o->attributes = ( int )( data[ 11 ] );
-    
-    if( o->attributes == DirEntryAttributeLFN )
-    {
-        return o;
-    }
-    
-    memcpy( o->name, data, 11 );
-    __DirEntryFilename( o->name, o->filename );
-    
-    o->size = ( ( size_t )data[ 28 ] <<  0 )
-            | ( ( size_t )data[ 29 ] <<  8 )
-            | ( ( size_t )data[ 31 ] << 16 )
-            | ( ( size_t )data[ 30 ] << 24 );
-    
-    o->creationTime         = __DirEntryTimeFromUInt16( data + 16, data + 14 );
-    o->lastAccessTime       = __DirEntryTimeFromUInt16( data + 18, NULL );
-    o->lastModificationTime = __DirEntryTimeFromUInt16( data + 24, data + 22 );
-    
-    o->cluster = ( uint16_t )( ( ( uint16_t )data[ 26 ] ) | ( ( uint16_t )data[ 27 ] << 8 ) );
-    
-    return o;
 }

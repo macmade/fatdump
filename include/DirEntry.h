@@ -95,9 +95,16 @@ void                DirEntryDelete( MutableDirEntryRef o );
 const void        * DirEntryGetData( DirEntryRef o );
 size_t              DirEntryGetDataSize( DirEntryRef o );
 
-bool                DirEntryIsLFN( DirEntryRef o );
 bool                DirEntryIsFree( DirEntryRef o );
+bool                DirEntryIsReadOnly( DirEntryRef o );
+bool                DirEntryIsHidden( DirEntryRef o );
+bool                DirEntryIsSystem( DirEntryRef o );
+bool                DirEntryIsVolumeID( DirEntryRef o );
+bool                DirEntryIsDirectory( DirEntryRef o );
+bool                DirEntryIsArchive( DirEntryRef o );
+bool                DirEntryIsLFN( DirEntryRef o );
 
+const char        * DirEntryGetFilename( DirEntryRef o );
 const char        * DirEntryGetName( DirEntryRef o );
 int                 DirEntryGetAttributes( DirEntryRef o );
 time_t              DirEntryGetCreationTime( DirEntryRef o );

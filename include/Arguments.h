@@ -90,6 +90,7 @@ bool                ArgumentsGetShowRawFAT( ArgumentsRef o );
 bool                ArgumentsGetShowDir( ArgumentsRef o );
 bool                ArgumentsGetShowRawDir( ArgumentsRef o );
 bool                ArgumentsGetShowHelp( ArgumentsRef o );
+bool                ArgumentsGetShowHidden( ArgumentsRef o );
 
 #ifdef __cplusplus
 }

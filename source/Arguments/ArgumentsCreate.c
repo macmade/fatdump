@@ -111,6 +111,10 @@ MutableArgumentsRef ArgumentsCreate( int argc, const char ** argv )
         {
             o->showRawDir = true;
         }
+        else if( strcmp( argv[ i ], "--hidden" ) == 0 )
+        {
+            o->showHidden = true;
+        }
         else
         {
             if( o->diskPath == NULL )

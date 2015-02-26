@@ -64,78 +64,75 @@
  * @copyright       (c) 2010-2015, Jean-David Gadina - www.xs-labs.com
  */
 
-#include "DirEntry.h"
-#include "__private/DirEntry.h"
+#include "Display.h"
+#include "Print.h"
 
-MutableDirEntryRef DirEntryCreate( FILE * fp, DirRef dir )
+void DisplayFAT( DiskRef disk )
 {
-    struct __DirEntry * o;
-    uint8_t           * data;
-    char              * name;
-    char              * filename;
-    size_t              s;
+    FATRef          fat;
+    size_t          i;
+    size_t          entries;
+    size_t          cols;
+    size_t          n;
+    FATClusterType  type;
+    const char    * s;
     
-    if( fp == NULL || dir == NULL )
+    if( disk == NULL )
     {
-        return NULL;
+        return;
     }
     
-    s        = 32;
-    o        = calloc( sizeof( struct __DirEntry ), 1 );
-    data     = malloc( s );
-    name     = calloc( 1, 12 );
-    filename = calloc( 1, 13 );
+    fat     = DiskGetFAT( disk );
+    entries = FATGetEntryCount( fat );
+    cols    = PrintGetAvailableColumns();
+    n       = ( cols > 20 ) ? ( cols + 3 ) / 19 : 0;
     
-    if( o == NULL || data == NULL || name == NULL || filename == NULL )
+    PrintHeader( "FAT:" );
+    
+    for( i = 0; i < entries; i++ )
     {
-        free( o );
-        free( data );
-        free( name );
-        free( filename );
-        fprintf( stderr, "Error: out of memory.\n" );
+        type = FATGetClusterTypeForEntry( fat, i );
         
-        return NULL;
-    }
-    
-    o->dataSize = s;
-    o->data     = data;
-    o->name     = name;
-    o->filename = filename;
-    o->dir      = dir;
-    
-    s = fread( o->data, 1, o->dataSize, fp );
-    
-    if( s != o->dataSize )
-    {
-        free( o );
-        free( data );
-        free( name );
-        free( filename );
-        fprintf( stderr, "Error: invalid read of directory entry - Read %lu bytes, expected %lu\n", s, o->dataSize );
+        switch( type )
+        {
+            case FATClusterTypeFree:        s = "Free  "; break;
+            case FATClusterTypeUsed:        s = "Used  "; break;
+            case FATClusterTypeReserved:    s = "N/A   "; break;
+            case FATClusterTypeBad:         s = "Bad   "; break;
+            case FATClusterTypeLast:        s = "Last  "; break;
+        }
         
-        return NULL;
+        if( type == FATClusterTypeUsed )
+        {
+            printf
+            (
+                "%8lu: 0x%04lX",
+                ( unsigned long )i,
+                ( unsigned long )FATGetClusterForEntry( fat, i )
+            );
+        }
+        else
+        {
+            printf
+            (
+                "%8lu: %s",
+                ( unsigned long )i,
+                s
+            );
+        }
+        
+        if( n > 1 && ( i + 1 ) % n )
+        {
+            printf( " | " );
+            
+            if( i == entries - 1 )
+            {
+                printf( "\n" );
+            }
+        }
+        else
+        {
+            printf( "\n" );
+        }
     }
-    
-    o->attributes = ( int )( data[ 11 ] );
-    
-    if( o->attributes == DirEntryAttributeLFN )
-    {
-        return o;
-    }
-    
-    memcpy( o->name, data, 11 );
-    __DirEntryFilename( o->name, o->filename );
-    
-    o->size = ( ( size_t )data[ 28 ] <<  0 )
-            | ( ( size_t )data[ 29 ] <<  8 )
-            | ( ( size_t )data[ 31 ] << 16 )
-            | ( ( size_t )data[ 30 ] << 24 );
-    
-    o->creationTime         = __DirEntryTimeFromUInt16( data + 16, data + 14 );
-    o->lastAccessTime       = __DirEntryTimeFromUInt16( data + 18, NULL );
-    o->lastModificationTime = __DirEntryTimeFromUInt16( data + 24, data + 22 );
-    
-    o->cluster = ( uint16_t )( ( ( uint16_t )data[ 26 ] ) | ( ( uint16_t )data[ 27 ] << 8 ) );
-    
-    return o;
 }

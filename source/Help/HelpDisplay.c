@@ -80,6 +80,7 @@ void HelpDisplay( void )
         "    --fat-raw  Prints raw FAT data\n"
         "    --dir      Prints root directory infos\n"
         "    --dir-raw  Prints raw root directory data\n"
+        "    --hidden   Displays hidden file and folders\n"
         "    -h         Prints this help message\n"
         "\n"
         "Example:\n"

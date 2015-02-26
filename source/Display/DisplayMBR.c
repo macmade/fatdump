@@ -64,78 +64,60 @@
  * @copyright       (c) 2010-2015, Jean-David Gadina - www.xs-labs.com
  */
 
-#include "DirEntry.h"
-#include "__private/DirEntry.h"
+#include "Display.h"
+#include "Print.h"
 
-MutableDirEntryRef DirEntryCreate( FILE * fp, DirRef dir )
+void DisplayMBR( DiskRef disk )
 {
-    struct __DirEntry * o;
-    uint8_t           * data;
-    char              * name;
-    char              * filename;
-    size_t              s;
+    MBRRef mbr;
     
-    if( fp == NULL || dir == NULL )
+    if( disk == NULL )
     {
-        return NULL;
+        return;
     }
     
-    s        = 32;
-    o        = calloc( sizeof( struct __DirEntry ), 1 );
-    data     = malloc( s );
-    name     = calloc( 1, 12 );
-    filename = calloc( 1, 13 );
+    mbr = DiskGetMBR( disk );
     
-    if( o == NULL || data == NULL || name == NULL || filename == NULL )
-    {
-        free( o );
-        free( data );
-        free( name );
-        free( filename );
-        fprintf( stderr, "Error: out of memory.\n" );
-        
-        return NULL;
-    }
-    
-    o->dataSize = s;
-    o->data     = data;
-    o->name     = name;
-    o->filename = filename;
-    o->dir      = dir;
-    
-    s = fread( o->data, 1, o->dataSize, fp );
-    
-    if( s != o->dataSize )
-    {
-        free( o );
-        free( data );
-        free( name );
-        free( filename );
-        fprintf( stderr, "Error: invalid read of directory entry - Read %lu bytes, expected %lu\n", s, o->dataSize );
-        
-        return NULL;
-    }
-    
-    o->attributes = ( int )( data[ 11 ] );
-    
-    if( o->attributes == DirEntryAttributeLFN )
-    {
-        return o;
-    }
-    
-    memcpy( o->name, data, 11 );
-    __DirEntryFilename( o->name, o->filename );
-    
-    o->size = ( ( size_t )data[ 28 ] <<  0 )
-            | ( ( size_t )data[ 29 ] <<  8 )
-            | ( ( size_t )data[ 31 ] << 16 )
-            | ( ( size_t )data[ 30 ] << 24 );
-    
-    o->creationTime         = __DirEntryTimeFromUInt16( data + 16, data + 14 );
-    o->lastAccessTime       = __DirEntryTimeFromUInt16( data + 18, NULL );
-    o->lastModificationTime = __DirEntryTimeFromUInt16( data + 24, data + 22 );
-    
-    o->cluster = ( uint16_t )( ( ( uint16_t )data[ 26 ] ) | ( ( uint16_t )data[ 27 ] << 8 ) );
-    
-    return o;
+    PrintHeader( "MBR:" );
+    printf
+    (
+        "- OEM ID:                  %s\n"
+        "- Bytes per sector:        %lu\n"
+        "- Sectors per cluster:     %lu\n"
+        "- Reserved sectors:        %lu\n"
+        "- Number of FATs:          %lu\n"
+        "- Max root dir entries:    %lu\n"
+        "- Total sectors:           %lu\n"
+        "- Media descriptor:        0x%X\n"
+        "- Sectors per FAT:         %lu\n"
+        "- Sectors per track:       %lu\n"
+        "- Heads per cylinder:      %lu\n"
+        "- Hidden sectors:          %lu\n"
+        "- LBA sectors:             %lu\n"
+        "- Drive number:            0x%X\n"
+        "- Extended boot signature: 0x%X\n"
+        "- Volume serial number:    0x%X\n"
+        "- Volume label:            %s\n"
+        "- File system:             %s\n"
+        "- Bootable:                %s\n",
+        MBRGetOEMID( mbr ),
+        ( unsigned long )MBRGetBytesPerSector( mbr ),
+        ( unsigned long )MBRGetSectorsPerCluster( mbr ),
+        ( unsigned long )MBRGetReservedSectors( mbr ),
+        ( unsigned long )MBRGetNumberOfFATs( mbr ),
+        ( unsigned long )MBRGetMaxRootDirEntries( mbr ),
+        ( unsigned long )MBRGetTotalSectors( mbr ),
+        MBRGetMediaDescriptor( mbr ),
+        ( unsigned long )MBRGetSectorsPerFAT( mbr ),
+        ( unsigned long )MBRGetSectorsPerTrack( mbr ),
+        ( unsigned long )MBRGetHeadsPerCylinder( mbr ),
+        ( unsigned long )MBRGetHiddenSectors( mbr ),
+        ( unsigned long )MBRGetLBASectors( mbr ),
+        MBRGetDriveNumber( mbr ),
+        MBRGetExtendedBootSignature( mbr ),
+        MBRGetVolumeSerialNumber( mbr ),
+        MBRGetVolumeLabel( mbr ),
+        MBRGetFileSystem( mbr ),
+        ( MBRIsBootable( mbr ) ) ? "yes" : "no"
+    );
 }

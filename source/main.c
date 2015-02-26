@@ -71,6 +71,7 @@
 #include "MBR.h"
 #include "FAT.h"
 #include "Dir.h"
+#include "Display.h"
 
 int main( int argc, char * argv[] )
 {
@@ -102,307 +103,35 @@ int main( int argc, char * argv[] )
     
     if( ArgumentsGetShowMBR( args ) )
     {
-        {
-            MBRRef mbr;
-            
-            mbr = DiskGetMBR( disk );
-            
-            PrintHeader( "MBR:" );
-            printf
-            (
-                "- OEM ID:                  %s\n"
-                "- Bytes per sector:        %lu\n"
-                "- Sectors per cluster:     %lu\n"
-                "- Reserved sectors:        %lu\n"
-                "- Number of FATs:          %lu\n"
-                "- Max root dir entries:    %lu\n"
-                "- Total sectors:           %lu\n"
-                "- Media descriptor:        0x%X\n"
-                "- Sectors per FAT:         %lu\n"
-                "- Sectors per track:       %lu\n"
-                "- Heads per cylinder:      %lu\n"
-                "- Hidden sectors:          %lu\n"
-                "- LBA sectors:             %lu\n"
-                "- Drive number:            0x%X\n"
-                "- Extended boot signature: 0x%X\n"
-                "- Volume serial number:    0x%X\n"
-                "- Volume label:            %s\n"
-                "- File system:             %s\n"
-                "- Bootable:                %s\n",
-                MBRGetOEMID( mbr ),
-                ( unsigned long )MBRGetBytesPerSector( mbr ),
-                ( unsigned long )MBRGetSectorsPerCluster( mbr ),
-                ( unsigned long )MBRGetReservedSectors( mbr ),
-                ( unsigned long )MBRGetNumberOfFATs( mbr ),
-                ( unsigned long )MBRGetMaxRootDirEntries( mbr ),
-                ( unsigned long )MBRGetTotalSectors( mbr ),
-                MBRGetMediaDescriptor( mbr ),
-                ( unsigned long )MBRGetSectorsPerFAT( mbr ),
-                ( unsigned long )MBRGetSectorsPerTrack( mbr ),
-                ( unsigned long )MBRGetHeadsPerCylinder( mbr ),
-                ( unsigned long )MBRGetHiddenSectors( mbr ),
-                ( unsigned long )MBRGetLBASectors( mbr ),
-                MBRGetDriveNumber( mbr ),
-                MBRGetExtendedBootSignature( mbr ),
-                MBRGetVolumeSerialNumber( mbr ),
-                MBRGetVolumeLabel( mbr ),
-                MBRGetFileSystem( mbr ),
-                ( MBRIsBootable( mbr ) ) ? "yes" : "no"
-            );
-        }
+        DisplayMBR( disk );
     }
     
     if( ArgumentsGetShowRawMBR( args ) )
     {
-        {
-            MBRRef mbr;
-            
-            mbr = DiskGetMBR( disk );
-            
-            PrintHeader( "MBR raw data:" );
-            PrintData( MBRGetData( mbr ), MBRGetDataSize( mbr ) );
-        }
+        DisplayMBRRaw( disk );
     }
     
     if( ArgumentsGetShowFAT( args ) )
     {
-        {
-            FATRef          fat;
-            size_t          i;
-            size_t          entries;
-            size_t          cols;
-            size_t          n;
-            FATClusterType  type;
-            const char    * s;
-            
-            fat     = DiskGetFAT( disk );
-            entries = FATGetEntryCount( fat );
-            cols    = PrintGetAvailableColumns();
-            n       = ( cols > 20 ) ? ( cols + 3 ) / 19 : 0;
-            
-            PrintHeader( "FAT:" );
-            
-            for( i = 0; i < entries; i++ )
-            {
-                type = FATGetClusterTypeForEntry( fat, i );
-                
-                switch( type )
-                {
-                    case FATClusterTypeFree:        s = "Free  "; break;
-                    case FATClusterTypeUsed:        s = "Used  "; break;
-                    case FATClusterTypeReserved:    s = "N/A   "; break;
-                    case FATClusterTypeBad:         s = "Bad   "; break;
-                    case FATClusterTypeLast:        s = "Last  "; break;
-                }
-                
-                if( type == FATClusterTypeUsed )
-                {
-                    printf
-                    (
-                        "%8lu: 0x%04lX",
-                        ( unsigned long )i,
-                        ( unsigned long )FATGetClusterForEntry( fat, i )
-                    );
-                }
-                else
-                {
-                    printf
-                    (
-                        "%8lu: %s",
-                        ( unsigned long )i,
-                        s
-                    );
-                }
-                
-                if( n > 1 && ( i + 1 ) % n )
-                {
-                    printf( " | " );
-                    
-                    if( i == entries - 1 )
-                    {
-                        printf( "\n" );
-                    }
-                }
-                else
-                {
-                    printf( "\n" );
-                }
-            }
-        }
+        DisplayFAT( disk );
     }
     
     if( ArgumentsGetShowRawFAT( args ) )
     {
-        {
-            FATRef fat;
-            
-            fat = DiskGetFAT( disk );
-            
-            PrintHeader( "FAT raw data:" );
-            PrintData( FATGetData( fat ), FATGetDataSize( fat ) );
-        }
+        DisplayFATRaw( disk );
     }
     
     if( ArgumentsGetShowDir( args ) )
     {
-        {
-            DirRef      dir;
-            DirEntryRef entry;
-            size_t      entries;
-            size_t      i;
-            size_t      j;
-            size_t      k;
-            size_t      cols;
-            size_t      n;
-            int         attributes;
-            time_t      t;
-            char        s[ 20 ];
-            struct tm * tm;
-            
-            dir     = DiskGetRootDirectory( disk );
-            entries = DirGetEntryCount( dir );
-            cols    = PrintGetAvailableColumns();
-            n       = ( cols > 50 ) ? ( cols + 3 ) / 53 : 0;
-            
-            PrintHeader( "Root directory:" );
-            
-            for( i = 0; i < entries; i++ )
-            {
-                for( j = 0; j < 13; j++ )
-                {
-                    for( k = 0; k < n; k++ )
-                    {
-                        if( i + k >= entries )
-                        {
-                            break;
-                        }
-                        
-                        entry       = DirGetEntry( dir, i + k );
-                        attributes  = DirEntryGetAttributes( entry );
-                        
-                        if( j == 0 )
-                        {
-                            if( DirEntryIsLFN( entry ) )
-                            {
-                                printf( "%-4lu: %-44s", i + k + 1, "LFN" );
-                            }
-                            else if( DirEntryIsFree( entry ) )
-                            {
-                                printf( "%-4lu: %-44s", i + k + 1, "Free" );
-                            }
-                            else
-                            {
-                                printf( "%-4lu: %-44s", i + k + 1, DirEntryGetName( entry ) );
-                            }
-                        }
-                        else if( DirEntryIsLFN( entry ) )
-                        {
-                            printf( ".................................................." );
-                        }
-                        else if( DirEntryIsFree( entry ) )
-                        {
-                            printf( "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" );
-                        }
-                        else if( j == 1 )
-                        {
-                            printf( "    - Size:                    %-19lu", DirEntryGetSize( entry ) );
-                        }
-                        else if( j == 2 )
-                        {
-                            printf( "    - Cluster:                 %-19lu", ( unsigned long )DirEntryGetCluster( entry ) );
-                        }
-                        else if( j == 3 )
-                        {
-                            t  = DirEntryGetCreationTime( entry );
-                            tm = localtime( &t );
-                            
-                            strftime( s, sizeof( s ), "%Y/%m/%d %H:%M:%S", tm );
-                            printf( "    - Creation time:           %-19s", ( t == 0 ) ? "-" : s );
-                        }
-                        else if( j == 4 )
-                        {
-                            t  = DirEntryGetLastAccessTime( entry );
-                            tm = localtime( &t );
-                            
-                            strftime( s, sizeof( s ), "%Y/%m/%d %H:%M:%S", tm );
-                            printf( "    - Last access time:        %-19s", ( t == 0 ) ? "-" : s );
-                        }
-                        else if( j == 5 )
-                        {
-                            t  = DirEntryGetLastModificationTime( entry );
-                            tm = localtime( &t );
-                            
-                            strftime( s, sizeof( s ), "%Y/%m/%d %H:%M:%S", tm );
-                            printf( "    - Last modification time:  %-19s", ( t == 0 ) ? "-" : s );
-                        }
-                        else if( j == 6 )
-                        {
-                            printf( "    - Read-only:               %-19s", ( attributes & DirEntryAttributeReadOnly ) ? "yes" : "no" );
-                        }
-                        else if( j == 7 )
-                        {
-                            printf( "    - Hidden:                  %-19s", ( attributes & DirEntryAttributeHidden ) ? "yes" : "no" );
-                        }
-                        else if( j == 8 )
-                        {
-                            printf( "    - System:                  %-19s", ( attributes & DirEntryAttributeSystem ) ? "yes" : "no" );
-                        }
-                        else if( j == 9 )
-                        {
-                            printf( "    - Volume ID:               %-19s", ( attributes & DirEntryAttributeVolumeID ) ? "yes" : "no" );
-                        }
-                        else if( j == 10 )
-                        {
-                            printf( "    - Directory:               %-19s", ( attributes & DirEntryAttributeDirectory ) ? "yes" : "no" );
-                        }
-                        else if( j == 11 )
-                        {
-                            printf( "    - Archive:                 %-19s", ( attributes & DirEntryAttributeArchive ) ? "yes" : "no" );
-                        }
-                        else if( j == 12 )
-                        {
-                            printf( "    - LFN:                     %-19s", ( DirEntryIsLFN( entry ) ) ? "yes" : "no" );
-                        }
-                        
-                        if( n > 1 && ( k + 1 ) % n )
-                        {
-                            printf( " | " );
-                            
-                            if( i + k == entries - 1 )
-                            {
-                                printf( "\n" );
-                            }
-                        }
-                        else if( k == n - 1 && j == 12 )
-                        {
-                            printf( "\n" );
-                            PrintLine();
-                        }
-                        else
-                        {
-                            printf( "\n" );
-                        }
-                    }
-                }
-                
-                i += n - 1;
-            }
-        }
+        DisplayRootDirectory( disk );
     }
     
     if( ArgumentsGetShowRawDir( args ) )
     {
-        {
-            DirRef dir;
-            
-            dir = DiskGetRootDirectory( disk );
-            
-            PrintHeader( "Root directory raw data:" );
-            PrintData( DirGetData( dir ), DirGetDataSize( dir ) );
-        }
+        DisplayRootDirectoryRaw( disk );
     }
     
-    PrintLine();
+    DisplayFiles( disk, ArgumentsGetShowHidden( args ) );
     
     success:
     
