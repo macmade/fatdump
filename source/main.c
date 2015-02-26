@@ -214,19 +214,19 @@ int main( int argc, char * argv[] )
                     );
                 }
                 
-                if( n > 1 && ( i + 1 ) % n && i != entries - 1 )
+                if( n > 1 && ( i + 1 ) % n )
                 {
                     printf( " | " );
+                    
+                    if( i == entries - 1 )
+                    {
+                        printf( "\n" );
+                    }
                 }
                 else
                 {
                     printf( "\n" );
                 }
-            }
-            
-            if( n > 1 && i % n && i != entries )
-            {
-                printf( "\n" );
             }
         }
     }
@@ -246,11 +246,128 @@ int main( int argc, char * argv[] )
     if( ArgumentsGetShowDir( args ) )
     {
         {
-            DirRef dir;
+            DirRef              dir;
+            DirEntryRef         entry;
+            size_t              entries;
+            size_t              i;
+            size_t              j;
+            size_t              k;
+            size_t              cols;
+            size_t              n;
+            DirEntryAttributes  attributes;
+            time_t              t;
+            char                s[ 20 ];
+            struct tm         * tm;
             
-            dir = DiskGetRootDirectory( disk );
+            dir     = DiskGetRootDirectory( disk );
+            entries = DirGetEntryCount( dir );
+            cols    = PrintGetAvailableColumns();
+            n       = ( cols > 50 ) ? ( cols + 3 ) / 53 : 0;
             
             PrintHeader( "Root directory:" );
+            
+            for( i = 0; i < entries; i++ )
+            {
+                for( j = 0; j < 13; j++ )
+                {
+                    for( k = 0; k < n; k++ )
+                    {
+                        if( i + k >= entries )
+                        {
+                            break;
+                        }
+                        
+                        entry       = DirGetEntry( dir, i + k );
+                        attributes  = DirEntryGetAttributes( entry );
+                        
+                        if( j == 0 )
+                        {
+                            printf( "%-4lu: %-44s", i + k + 1, DirEntryGetName( entry ) );
+                        }
+                        else if( j == 1 )
+                        {
+                            printf( "    - Size:                    %-19lu", DirEntryGetSize( entry ) );
+                        }
+                        else if( j == 2 )
+                        {
+                            printf( "    - Cluster:                 0x%-17X", DirEntryGetCluster( entry ) );
+                        }
+                        else if( j == 3 )
+                        {
+                            t  = DirEntryGetCreationTime( entry );
+                            tm = localtime( &t );
+                            
+                            strftime( s, sizeof( s ), "%Y/%m/%d %H:%M:%S", tm );
+                            printf( "    - Creation time:           %-19s", s );
+                        }
+                        else if( j == 4 )
+                        {
+                            t  = DirEntryGetLastAccessTime( entry );
+                            tm = localtime( &t );
+                            
+                            strftime( s, sizeof( s ), "%Y/%m/%d %H:%M:%S", tm );
+                            printf( "    - Last access time:        %-19s", s );
+                        }
+                        else if( j == 5 )
+                        {
+                            t  = DirEntryGetLastModificationTime( entry );
+                            tm = localtime( &t );
+                            
+                            strftime( s, sizeof( s ), "%Y/%m/%d %H:%M:%S", tm );
+                            printf( "    - Last modification time:  %-19s", s );
+                        }
+                        else if( j == 6 )
+                        {
+                            printf( "    - Read-only:               %-19s", ( attributes & DirEntryAttributeReadOnly  ) ? "yes" : "no" );
+                        }
+                        else if( j == 7 )
+                        {
+                            printf( "    - Hidden:                  %-19s", ( attributes & DirEntryAttributeHidden  ) ? "yes" : "no" );
+                        }
+                        else if( j == 8 )
+                        {
+                            printf( "    - System:                  %-19s", ( attributes & DirEntryAttributeSystem  ) ? "yes" : "no" );
+                        }
+                        else if( j == 9 )
+                        {
+                            printf( "    - Volume ID:               %-19s", ( attributes & DirEntryAttributeVolumeID  ) ? "yes" : "no" );
+                        }
+                        else if( j == 10 )
+                        {
+                            printf( "    - Directory:               %-19s", ( attributes & DirEntryAttributeDirectory  ) ? "yes" : "no" );
+                        }
+                        else if( j == 11 )
+                        {
+                            printf( "    - Archive:                 %-19s", ( attributes & DirEntryAttributeArchive  ) ? "yes" : "no" );
+                        }
+                        else if( j == 12 )
+                        {
+                            printf( "    - LFN:                     %-19s", ( attributes & DirEntryAttributeLFN  ) ? "yes" : "no" );
+                        }
+                        
+                        if( n > 1 && ( k + 1 ) % n )
+                        {
+                            printf( " | " );
+                            
+                            if( i + k == entries - 1 )
+                            {
+                                printf( "\n" );
+                            }
+                        }
+                        else if( k == n - 1 && j == 12 )
+                        {
+                            printf( "\n" );
+                            PrintLine();
+                        }
+                        else
+                        {
+                            printf( "\n" );
+                        }
+                    }
+                }
+                
+                i += n - 1;
+            }
         }
     }
     
