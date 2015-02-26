@@ -101,6 +101,17 @@ MutableDiskRef DiskCreate( const char * path )
     }
     
     mbr = MBRCreate( fp );
+    
+    if( MBRGetReservedSectors( mbr ) > 1 )
+    {
+        fseek
+        (
+            fp,
+            ( long )( MBRGetBytesPerSector( mbr ) * MBRGetReservedSectors( mbr ) ),
+            SEEK_CUR
+        );
+    }
+    
     fat = FATCreate( fp, mbr );
     
     for( i = 1; i < MBRGetNumberOfFATs( mbr ); i++ )
