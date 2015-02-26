@@ -76,5 +76,4 @@ void DisplayFiles( DiskRef disk, bool showHidden )
     
     PrintHeader( "Files in volume: %s", MBRGetVolumeLabel( DiskGetMBR( disk ) ) );
     DisplayFilesOfDirectory( DiskGetRootDirectory( disk ), showHidden, 0 );
-    PrintLine();
 }

@@ -91,6 +91,7 @@ bool                ArgumentsGetShowDir( ArgumentsRef o );
 bool                ArgumentsGetShowRawDir( ArgumentsRef o );
 bool                ArgumentsGetShowHelp( ArgumentsRef o );
 bool                ArgumentsGetShowHidden( ArgumentsRef o );
+bool                ArgumentsGetShowData( ArgumentsRef o );
 
 #ifdef __cplusplus
 }

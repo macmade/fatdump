@@ -64,28 +64,40 @@
  * @copyright       (c) 2010-2015, Jean-David Gadina - www.xs-labs.com
  */
 
-#include "Help.h"
+#include "Display.h"
+#include "Print.h"
 
-void HelpDisplay( void )
+void DisplayFilesDataOfDirectory( DirRef dir, bool showHidden )
 {
-    printf
-    (
-        "fatdump [OPTIONS] IMAGE\n"
-        "\n"
-        "Options\n"
-        "\n"
-        "    --mbr      Prints MBR infos\n"
-        "    --mbr-raw  Prints raw MBR data\n"
-        "    --fat      Prints FAT infos\n"
-        "    --fat-raw  Prints raw FAT data\n"
-        "    --dir      Prints root directory infos\n"
-        "    --dir-raw  Prints raw root directory data\n"
-        "    --hidden   Displays hidden file and folders\n"
-        "    --data     Displays raw data for files\n"
-        "    -h         Prints this help message\n"
-        "\n"
-        "Example:\n"
-        "\n"
-        "    fatdump fat-disk.img\n"
-     );
+    DirEntryRef entry;
+    size_t      entries;
+    size_t      i;
+    size_t      c;
+    
+    if( dir == NULL )
+    {
+        return;
+    }
+    
+    c       = PrintGetAvailableColumns();
+    entries = DirGetEntryCount( dir );
+    
+    for( i = 0; i < entries; i++ )
+    {
+        entry = DirGetEntry( dir, i );
+        
+        if
+        (
+               DirEntryIsLFN( entry )
+            || DirEntryIsFree( entry )
+            || DirEntryIsVolumeID( entry )
+            || DirEntryIsDirectory( entry )
+            || ( DirEntryIsHidden( entry ) && !showHidden )
+        )
+        {
+            continue;
+        }
+        
+        PrintHeader( "Data for file: %s", DirEntryGetFilename( entry ) );
+    }
 }

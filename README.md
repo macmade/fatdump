@@ -28,6 +28,7 @@ Usage
         --dir      Prints root directory infos
         --dir-raw  Prints raw root directory data
         --hidden   Displays hidden file and folders
+        --data     Displays raw data for files
         -h         Prints this help message
     
     Example:

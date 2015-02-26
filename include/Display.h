@@ -83,6 +83,8 @@ void DisplayRootDirectory( DiskRef disk );
 void DisplayRootDirectoryRaw( DiskRef disk );
 void DisplayFiles( DiskRef disk, bool showHidden );
 void DisplayFilesOfDirectory( DirRef dir, bool showHidden, int level );
+void DisplayFilesData( DiskRef disk, bool showHidden );
+void DisplayFilesDataOfDirectory( DirRef dir, bool showHidden );
 
 #ifdef __cplusplus
 }

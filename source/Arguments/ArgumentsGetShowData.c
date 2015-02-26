@@ -64,28 +64,15 @@
  * @copyright       (c) 2010-2015, Jean-David Gadina - www.xs-labs.com
  */
 
-#include "Help.h"
+#include "Arguments.h"
+#include "__private/Arguments.h"
 
-void HelpDisplay( void )
+bool ArgumentsGetShowData( ArgumentsRef o )
 {
-    printf
-    (
-        "fatdump [OPTIONS] IMAGE\n"
-        "\n"
-        "Options\n"
-        "\n"
-        "    --mbr      Prints MBR infos\n"
-        "    --mbr-raw  Prints raw MBR data\n"
-        "    --fat      Prints FAT infos\n"
-        "    --fat-raw  Prints raw FAT data\n"
-        "    --dir      Prints root directory infos\n"
-        "    --dir-raw  Prints raw root directory data\n"
-        "    --hidden   Displays hidden file and folders\n"
-        "    --data     Displays raw data for files\n"
-        "    -h         Prints this help message\n"
-        "\n"
-        "Example:\n"
-        "\n"
-        "    fatdump fat-disk.img\n"
-     );
+    if( o == NULL )
+    {
+        return false;
+    }
+    
+    return o->showData;
 }

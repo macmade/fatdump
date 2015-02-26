@@ -133,6 +133,13 @@ int main( int argc, char * argv[] )
     
     DisplayFiles( disk, ArgumentsGetShowHidden( args ) );
     
+    if( ArgumentsGetShowData( args ) )
+    {
+        DisplayFilesData( disk, ArgumentsGetShowHidden( args ) );
+    }
+    
+    PrintLine();
+    
     success:
     
         ret = EXIT_SUCCESS;
