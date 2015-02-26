@@ -69,7 +69,48 @@
 
 MutableDiskRef DiskCreate( const char * path )
 {
-    ( void )path;
+    FILE          * fp;
+    struct __Disk * o;
+    MutableMBRRef   mbr;
     
-    return NULL;
+    if( path == NULL )
+    {
+        return NULL;
+    }
+    
+    fp   = fopen( path, "rb" );
+    o    = calloc( sizeof( struct __Disk ), 1 );
+    
+    if( fp == NULL )
+    {
+        free( o );
+        fprintf( stderr, "Error: cannot open file for reading (%s).\n", path );
+        
+        return NULL;
+    }
+    
+    if( o == NULL )
+    {
+        fclose( fp );
+        free( o );
+        fprintf( stderr, "Error: out of memory.\n" );
+        
+        return NULL;
+    }
+    
+    mbr = MBRCreate( fp );
+    
+    if( mbr == NULL )
+    {
+        free( o );
+        fclose( fp );
+        
+        return NULL;
+    }
+    
+    o->mbr = mbr;
+    
+    fclose( fp );
+    
+    return o;
 }
