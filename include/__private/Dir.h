@@ -74,6 +74,7 @@ extern "C" {
 #include "C99.h"
 #include "../Dir.h"
 #include "../Disk.h"
+#include "../DirEntry.h"
 
 #ifdef __clang__
 #pragma clang diagnostic push
@@ -82,9 +83,11 @@ extern "C" {
 
 struct __Dir
 {
-    uint8_t * data;
-    size_t    dataSize;
-    DiskRef   disk;
+    DiskRef       disk;
+    uint8_t     * data;
+    DirEntryRef * entries;
+    size_t        dataSize;
+    size_t        entryCount;
 };
 
 #ifdef __clang__

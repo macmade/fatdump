@@ -77,11 +77,32 @@ typedef       struct __DirEntry * MutableDirEntryRef;
 #include "C99.h"
 #include "Disk.h"
 
+typedef enum
+{
+    DirEntryAttributeUnknown   = 0x00,
+    DirEntryAttributeReadOnly  = 0x01,
+    DirEntryAttributeHidden    = 0x02,
+    DirEntryAttributeSystem    = 0x04,
+    DirEntryAttributeVolumeID  = 0x08,
+    DirEntryAttributeDirectory = 0x10,
+    DirEntryAttributeArchive   = 0x20,
+    DirEntryAttributeLFN       = 0x0F
+}
+DirEntryAttributes;
+
 MutableDirEntryRef  DirEntryCreate( FILE * fp, DirRef dir );
 void                DirEntryDelete( MutableDirEntryRef o );
 
 const void        * DirEntryGetData( DirEntryRef o );
 size_t              DirEntryGetDataSize( DirEntryRef o );
+
+const char        * DirEntryGetName( DirEntryRef o );
+DirEntryAttributes  DirEntryGetAttributes( DirEntryRef o );
+time_t              DirEntryGetCreationTime( DirEntryRef o );
+time_t              DirEntryGetLastAccessTime( DirEntryRef o );
+time_t              DirEntryGetLastModificationTime( DirEntryRef o );
+uint16_t            DirEntryGetCluster( DirEntryRef o );
+size_t              DirEntryGetSize( DirEntryRef o );
 
 #ifdef __cplusplus
 }

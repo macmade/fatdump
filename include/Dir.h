@@ -76,12 +76,16 @@ typedef       struct __Dir * MutableDirRef;
 
 #include "C99.h"
 #include "Disk.h"
+#include "DirEntry.h"
 
 MutableDirRef   DirCreate( FILE * fp, DiskRef disk );
 void            DirDelete( MutableDirRef o );
 
 const void    * DirGetData( DirRef o );
 size_t          DirGetDataSize( DirRef o );
+
+size_t          DirGetEntryCount( DirRef o );
+DirEntryRef     DirGetEntry( DirRef o, size_t entry );
 
 #ifdef __cplusplus
 }

@@ -78,7 +78,7 @@ MutableDirEntryRef DirEntryCreate( FILE * fp, DirRef dir )
         return NULL;
     }
     
-    s    = 0;
+    s    = 32;
     o    = calloc( sizeof( struct __DirEntry ), 1 );
     data = malloc( s );
     

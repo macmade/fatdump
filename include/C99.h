@@ -78,6 +78,7 @@ extern "C" {
 #include <stdint.h>
 #include <ctype.h>
 #include <stdarg.h>
+#include <time.h>
 
 #ifdef __cplusplus
 }

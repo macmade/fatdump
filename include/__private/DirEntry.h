@@ -82,9 +82,16 @@ extern "C" {
 
 struct __DirEntry
 {
-    uint8_t * data;
-    size_t    dataSize;
-    DirRef    dir;
+    uint8_t           * data;
+    size_t              dataSize;
+    DirRef              dir;
+    char              * name;
+    DirEntryAttributes  attributes;
+    time_t              creationTime;
+    time_t              lastAccessTime;
+    time_t              lastModificationTime;
+    uint16_t            cluster;
+    size_t              size;
 };
 
 #ifdef __clang__

@@ -68,15 +68,16 @@ include make/Targets.mk
 TOOL    := fatdump
 PROMPT  := XEOS TOOLS FATDUMP
 DEPS    := 
-FILES   := $(call XEOS_FUNC_C_FILES,$(DIR_SRC))               \
-           $(call XEOS_FUNC_C_FILES,$(DIR_SRC)Arguments/)     \
-           $(call XEOS_FUNC_C_FILES,$(DIR_SRC)Disk/)          \
-           $(call XEOS_FUNC_C_FILES,$(DIR_SRC)FAT/)           \
-           $(call XEOS_FUNC_C_FILES,$(DIR_SRC)Help/)          \
-           $(call XEOS_FUNC_C_FILES,$(DIR_SRC)IO/)            \
-           $(call XEOS_FUNC_C_FILES,$(DIR_SRC)MBR/)           \
-           $(call XEOS_FUNC_C_FILES,$(DIR_SRC)Print/)         \
-           $(call XEOS_FUNC_C_FILES,$(DIR_SRC)Dir/)
+FILES   := $(call XEOS_FUNC_C_FILES,$(DIR_SRC))             \
+           $(call XEOS_FUNC_C_FILES,$(DIR_SRC)Arguments/)   \
+           $(call XEOS_FUNC_C_FILES,$(DIR_SRC)Dir/)         \
+           $(call XEOS_FUNC_C_FILES,$(DIR_SRC)DirEntry/)    \
+           $(call XEOS_FUNC_C_FILES,$(DIR_SRC)Disk/)        \
+           $(call XEOS_FUNC_C_FILES,$(DIR_SRC)FAT/)         \
+           $(call XEOS_FUNC_C_FILES,$(DIR_SRC)Help/)        \
+           $(call XEOS_FUNC_C_FILES,$(DIR_SRC)IO/)          \
+           $(call XEOS_FUNC_C_FILES,$(DIR_SRC)MBR/)         \
+           $(call XEOS_FUNC_C_FILES,$(DIR_SRC)Print/)
 
 all: tool-build
 	

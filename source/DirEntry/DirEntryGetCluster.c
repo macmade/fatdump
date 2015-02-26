@@ -64,86 +64,15 @@
  * @copyright       (c) 2010-2015, Jean-David Gadina - www.xs-labs.com
  */
 
-#include "Dir.h"
-#include "__private/Dir.h"
+#include "DirEntry.h"
+#include "__private/DirEntry.h"
 
-MutableDirRef DirCreate( FILE * fp, DiskRef disk )
+uint16_t DirEntryGetCluster( DirEntryRef o )
 {
-    struct __Dir * o;
-    uint8_t      * data;
-    DirEntryRef  * entries;
-    DirEntryRef    entry;
-    size_t         s;
-    size_t         c;
-    size_t         i;
-    MBRRef         mbr;
-    
-    mbr = DiskGetMBR( disk );
-    
-    if( fp == NULL || disk == NULL || mbr == NULL )
+    if( o == NULL )
     {
-        return NULL;
+        return 0;
     }
     
-    c = MBRGetMaxRootDirEntries( mbr );
-    s = c * 32;
-    
-    if( s % MBRGetBytesPerSector( mbr ) != 0 )
-    {
-        fprintf( stderr, "Error: invalid root directory size (%lu)\n", s );
-        
-        return NULL;
-    }
-    
-    o       = calloc( sizeof( struct __Dir ), 1 );
-    data    = malloc( s );
-    entries = calloc( sizeof( DirEntryRef ), c );
-    
-    if( o == NULL || data == NULL || entries == NULL )
-    {
-        free( o );
-        free( data );
-        free( entries );
-        fprintf( stderr, "Error: out of memory.\n" );
-        
-        return NULL;
-    }
-    
-    o->dataSize     = s;
-    o->entryCount   = c;
-    o->data         = data;
-    o->entries      = entries;
-    o->disk         = disk;
-    
-    s = fread( o->data, 1, o->dataSize, fp );
-    
-    if( s != o->dataSize )
-    {
-        free( o );
-        free( data );
-        free( entries );
-        fprintf( stderr, "Error: invalid read of root directory - Read %lu bytes, expected %lu\n", s, o->dataSize );
-        
-        return NULL;
-    }
-    
-    fseek( fp, -( ( long )s ), SEEK_CUR );
-    
-    for( i = 0; i < c; i++ )
-    {
-        entry = DirEntryCreate( fp, o );
-        
-        if( entry == NULL )
-        {
-            free( o );
-            free( data );
-            free( entries );
-            
-            return NULL;
-        }
-        
-        o->entries[ i ] = entry;
-    }
-    
-    return o;
+    return o->cluster;
 }
