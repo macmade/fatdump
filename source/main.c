@@ -66,18 +66,19 @@
 
 #include "Arguments.h"
 #include "Help.h"
-#include "MBR.h"
+#include "Print.h"
 #include "Disk.h"
+#include "MBR.h"
+#include "FAT.h"
+#include "RootDirectory.h"
 
 int main( int argc, char * argv[] )
 {
     MutableArgumentsRef args;
-    MBRRef              mbr;
     MutableDiskRef      disk;
     int                 ret;
     
     args = ArgumentsCreate( argc, ( const char ** )argv );
-    mbr  = NULL;
     disk = NULL;
     
     if( ArgumentsGetShowHelp( args ) )
@@ -99,12 +100,99 @@ int main( int argc, char * argv[] )
         goto failure;
     }
     
-    mbr = DiskGetMBR( disk );
-    
-    if( mbr == NULL )
+    if( ArgumentsGetShowMBR( args ) )
     {
-        goto failure;
+        {
+            MBRRef mbr;
+            
+            mbr = DiskGetMBR( disk );
+            
+            PrintHeader( "MBR:" );
+            printf
+            (
+                "- OEM ID:                  %s\n"
+                "- Bytes per sector:        %lu\n"
+                "- Sectors per cluster:     %lu\n"
+                "- Reserved sectors:        %lu\n"
+                "- Number of FATs:          %lu\n"
+                "- Max root dir entries:    %lu\n"
+                "- Total sectors:           %lu\n"
+                "- Media descriptor:        0x%X\n"
+                "- Sectors per FAT:         %lu\n"
+                "- Sectors per track:       %lu\n"
+                "- Heads per cylinder:      %lu\n"
+                "- Hidden sectors:          %lu\n"
+                "- LBA sectors:             %lu\n"
+                "- Drive number:            0x%X\n"
+                "- Extended boot signature: 0x%X\n"
+                "- Volume serial number:    0x%X\n"
+                "- Volume label:            %s\n"
+                "- File system:             %s\n"
+                "- Bootable:                %s\n",
+                MBRGetOEMID( mbr ),
+                ( unsigned long )MBRGetBytesPerSector( mbr ),
+                ( unsigned long )MBRGetSectorsPerCluster( mbr ),
+                ( unsigned long )MBRGetReservedSectors( mbr ),
+                ( unsigned long )MBRGetNumberOfFATs( mbr ),
+                ( unsigned long )MBRGetMaxRootDirEntries( mbr ),
+                ( unsigned long )MBRGetTotalSectors( mbr ),
+                MBRGetMediaDescriptor( mbr ),
+                ( unsigned long )MBRGetSectorsPerFAT( mbr ),
+                ( unsigned long )MBRGetSectorsPerTrack( mbr ),
+                ( unsigned long )MBRGetHeadsPerCylinder( mbr ),
+                ( unsigned long )MBRGetHiddenSectors( mbr ),
+                ( unsigned long )MBRGetLBASectors( mbr ),
+                MBRGetDriveNumber( mbr ),
+                MBRGetExtendedBootSignature( mbr ),
+                MBRGetVolumeSerialNumber( mbr ),
+                MBRGetVolumeLabel( mbr ),
+                MBRGetFileSystem( mbr ),
+                ( MBRIsBootable( mbr ) ) ? "yes" : "no"
+            );
+        }
     }
+    
+    if( ArgumentsGetShowRawMBR( args ) )
+    {
+        {
+            MBRRef mbr;
+            
+            mbr = DiskGetMBR( disk );
+            
+            PrintHeader( "MBR raw data:" );
+            PrintData( MBRGetData( mbr ), MBRGetDataSize( mbr ) );
+        }
+    }
+    
+    if( ArgumentsGetShowFAT( args ) )
+    {
+        {
+            PrintHeader( "FAT:" );
+        }
+    }
+    
+    if( ArgumentsGetShowRawFAT( args ) )
+    {
+        {
+            PrintHeader( "FAT raw data:" );
+        }
+    }
+    
+    if( ArgumentsGetShowDir( args ) )
+    {
+        {
+            PrintHeader( "Root directory:" );
+        }
+    }
+    
+    if( ArgumentsGetShowRawDir( args ) )
+    {
+        {
+            PrintHeader( "Root directory raw data:" );
+        }
+    }
+    
+    PrintLine();
     
     success:
     
