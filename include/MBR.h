@@ -79,8 +79,8 @@ typedef       struct __MBR * MutableMBRRef;
 MutableMBRRef   MBRCreate( FILE * fp );
 void            MBRDelete( MutableMBRRef o );
 
-const void *    MBRGetMBRData( MBRRef o );
-size_t          MBRGetMBRDataSize( MBRRef o );
+const void *    MBRGetData( MBRRef o );
+size_t          MBRGetDataSize( MBRRef o );
 
 bool            MBRIsBootable( MBRRef o );
 
