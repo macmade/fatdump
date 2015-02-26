@@ -81,7 +81,24 @@ void * DiskCreateFileDataForEntry( DiskRef o, DirEntryRef entry, size_t * size )
     cluster = DirEntryGetCluster( entry );
     s       = DirEntryGetSize( entry );
     
+    if
+    (
+            DirEntryIsFree( entry )
+        || DirEntryIsLFN( entry )
+        || DirEntryIsVolumeID( entry )
+    )
+    {
+        return NULL;
+    }
+    
     if( s == 0 )
+    {
+        return NULL;
+    }
+    
+    data = calloc( 1, s );
+    
+    if( data == NULL )
     {
         return NULL;
     }
@@ -91,7 +108,7 @@ void * DiskCreateFileDataForEntry( DiskRef o, DirEntryRef entry, size_t * size )
         *( size ) = s;
     }
     
-    data = malloc( s );
+    
     
     return data;
 }
