@@ -150,7 +150,7 @@ MutableDiskRef DiskCreate( const char * path )
     
     for( i = 1; i < MBRGetNumberOfFATs( mbr ); i++ )
     {
-        fseek( fp, ( long )MBRGetDataSize( mbr ), SEEK_CUR );
+        fseek( fp, ( long )FATGetDataSize( fat ), SEEK_CUR );
     }
     
     dir = DirCreate( fp, o );
