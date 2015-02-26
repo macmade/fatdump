@@ -67,60 +67,12 @@
 #include "Arguments.h"
 #include "__private/Arguments.h"
 
-MutableArgumentsRef ArgumentsCreate( int argc, const char ** argv )
+bool ArgumentsGetShowRawFAT( ArgumentsRef o )
 {
-    int                  i;
-    struct __Arguments * o;
-    
-    o = calloc( sizeof( struct __Arguments ), 1 );
-    
     if( o == NULL )
     {
-        fprintf( stderr, "Error: out of memory.\n" );
-        
-        return NULL;
+        return false;
     }
     
-    for( i = 1; i < argc; i++ )
-    {
-        if( strcmp( argv[ i ], "-h" ) == 0 )
-        {
-            o->showHelp = true;
-        }
-        else if( strcmp( argv[ i ], "--mbr" ) == 0 )
-        {
-            o->showMBR = true;
-        }
-        else if( strcmp( argv[ i ], "--mbr-raw" ) == 0 )
-        {
-            o->showRawMBR = true;
-        }
-        else if( strcmp( argv[ i ], "--fat" ) == 0 )
-        {
-            o->showFAT = true;
-        }
-        else if( strcmp( argv[ i ], "--fat-raw" ) == 0 )
-        {
-            o->showRawFAT = true;
-        }
-        else if( strcmp( argv[ i ], "--dir" ) == 0 )
-        {
-            o->showDir = true;
-        }
-        else if( strcmp( argv[ i ], "--dir-raw" ) == 0 )
-        {
-            o->showRawDir = true;
-        }
-        else
-        {
-            if( o->diskPath == NULL )
-            {
-                o->diskPath= argv[ i ];
-            }
-        }
-    }
-    
-    __ArgumentsCurrent = o;
-    
-    return o;
+    return o->showRawFAT;
 }

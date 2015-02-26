@@ -81,6 +81,12 @@ extern "C" {
 struct __Arguments
 {
     bool         showHelp;
+    bool         showMBR;
+    bool         showRawMBR;
+    bool         showFAT;
+    bool         showRawFAT;
+    bool         showDir;
+    bool         showRawDir;
     const char * diskPath;
 };
 

@@ -83,6 +83,12 @@ void                ArgumentsDelete( MutableArgumentsRef o );
 bool                ArgumentsValidate( ArgumentsRef o );
 
 const char        * ArgumentsGetDiskPath( ArgumentsRef o );
+bool                ArgumentsGetShowMBR( ArgumentsRef o );
+bool                ArgumentsGetShowRawMBR( ArgumentsRef o );
+bool                ArgumentsGetShowFAT( ArgumentsRef o );
+bool                ArgumentsGetShowRawFAT( ArgumentsRef o );
+bool                ArgumentsGetShowDir( ArgumentsRef o );
+bool                ArgumentsGetShowRawDir( ArgumentsRef o );
 bool                ArgumentsGetShowHelp( ArgumentsRef o );
 
 #ifdef __cplusplus

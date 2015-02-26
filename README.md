@@ -21,7 +21,13 @@ Usage
     
     Options
     
-        -h      Prints this help message
+        --mbr      Prints MBR infos
+        --mbr-raw  Prints raw MBR data
+        --fat      Prints FAT infos
+        --fat-raw  Prints raw FAT data
+        --dir      Prints root directory infos
+        --dir-raw  Prints raw root directory data
+        -h         Prints this help message
     
     Example:
     
