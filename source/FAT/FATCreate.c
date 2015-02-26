@@ -70,17 +70,37 @@
 MutableFATRef FATCreate( FILE * fp, MBRRef mbr )
 {
     struct __FAT * o;
+    uint8_t      * data;
+    size_t         s;
     
     if( fp == NULL || mbr == NULL )
     {
         return NULL;
     }
     
-    o = calloc( sizeof( struct __FAT ), 1 );
+    s    = MBRGetSectorsPerFAT( mbr ) * MBRGetBytesPerSector( mbr );
+    o    = calloc( sizeof( struct __FAT ), 1 );
+    data = malloc( s );
     
-    if( o == NULL )
+    if( o == NULL || data == NULL )
     {
+        free( o );
+        free( data );
         fprintf( stderr, "Error: out of memory.\n" );
+        
+        return NULL;
+    }
+    
+    o->dataSize = s;
+    o->data     = data;
+    
+    s = fread( o->data, 1, o->dataSize, fp );
+    
+    if( s != o->dataSize )
+    {
+        free( o );
+        free( data );
+        fprintf( stderr, "Error: invalid read of MBR - Read %lu bytes, expected %lu\n", s, o->dataSize );
         
         return NULL;
     }

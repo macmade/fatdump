@@ -97,7 +97,7 @@ MutableMBRRef MBRCreate( FILE * fp )
     {
         free( o );
         free( data );
-        fprintf( stderr, "Error: invalid read of MBR - Read %lu bytes, expecting %lu\n", s, sizeof( struct __MBRData ) );
+        fprintf( stderr, "Error: invalid read of MBR - Read %lu bytes, expected %lu\n", s, sizeof( struct __MBRData ) );
         
         return NULL;
     }
