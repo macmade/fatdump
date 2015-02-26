@@ -67,7 +67,7 @@
 #include "Display.h"
 #include "Print.h"
 
-void DisplayFiles( DiskRef disk, bool showHidden )
+void DisplayFiles( DiskRef disk, bool showHidden, bool showDeleted )
 {
     if( disk == NULL )
     {
@@ -75,5 +75,5 @@ void DisplayFiles( DiskRef disk, bool showHidden )
     }
     
     PrintHeader( "Files in volume: %s", MBRGetVolumeLabel( DiskGetMBR( disk ) ) );
-    DisplayFilesOfDirectory( DiskGetRootDirectory( disk ), showHidden, 0 );
+    DisplayFilesOfDirectory( DiskGetRootDirectory( disk ), showHidden, showDeleted, 0 );
 }

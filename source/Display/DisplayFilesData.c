@@ -67,12 +67,12 @@
 #include "Display.h"
 #include "Print.h"
 
-void DisplayFilesData( DiskRef disk, bool showHidden )
+void DisplayFilesData( DiskRef disk, bool showHidden, bool showDeleted )
 {
     if( disk == NULL )
     {
         return;
     }
     
-    DisplayFilesDataOfDirectory( DiskGetRootDirectory( disk ), showHidden );
+    DisplayFilesDataOfDirectory( DiskGetRootDirectory( disk ), showHidden, showDeleted );
 }

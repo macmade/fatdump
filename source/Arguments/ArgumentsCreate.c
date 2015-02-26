@@ -115,6 +115,10 @@ MutableArgumentsRef ArgumentsCreate( int argc, const char ** argv )
         {
             o->showHidden = true;
         }
+        else if( strcmp( argv[ i ], "--deleted" ) == 0 )
+        {
+            o->showDeleted = true;
+        }
         else if( strcmp( argv[ i ], "--data" ) == 0 )
         {
             o->showData = true;

@@ -131,11 +131,11 @@ int main( int argc, char * argv[] )
         DisplayRootDirectoryRaw( disk );
     }
     
-    DisplayFiles( disk, ArgumentsGetShowHidden( args ) );
+    DisplayFiles( disk, ArgumentsGetShowHidden( args ), ArgumentsGetShowDeleted( args ) );
     
     if( ArgumentsGetShowData( args ) )
     {
-        DisplayFilesData( disk, ArgumentsGetShowHidden( args ) );
+        DisplayFilesData( disk, ArgumentsGetShowHidden( args ), ArgumentsGetShowDeleted( args ) );
     }
     
     PrintLine();

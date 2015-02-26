@@ -64,30 +64,15 @@
  * @copyright       (c) 2010-2015, Jean-David Gadina - www.xs-labs.com
  */
 
-#ifndef FATDUMP_DISPLAY_H
-#define FATDUMP_DISPLAY_H
+#include "Arguments.h"
+#include "__private/Arguments.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include "C99.h"
-#include "Disk.h"
-#include "Dir.h"
-
-void DisplayMBR( DiskRef disk );
-void DisplayMBRRaw( DiskRef disk );
-void DisplayFAT( DiskRef disk );
-void DisplayFATRaw( DiskRef disk );
-void DisplayRootDirectory( DiskRef disk );
-void DisplayRootDirectoryRaw( DiskRef disk );
-void DisplayFiles( DiskRef disk, bool showHidden, bool showDeleted );
-void DisplayFilesOfDirectory( DirRef dir, bool showHidden, bool showDeleted, int level );
-void DisplayFilesData( DiskRef disk, bool showHidden, bool showDeleted );
-void DisplayFilesDataOfDirectory( DirRef dir, bool showHidden, bool showDeleted );
-
-#ifdef __cplusplus
+bool ArgumentsGetShowDeleted( ArgumentsRef o )
+{
+    if( o == NULL )
+    {
+        return false;
+    }
+    
+    return o->showDeleted;
 }
-#endif
-
-#endif /* FATDUMP_DISPLAY_H */

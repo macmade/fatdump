@@ -81,11 +81,12 @@ void HelpDisplay( void )
         "    --dir      Prints root directory infos\n"
         "    --dir-raw  Prints raw root directory data\n"
         "    --hidden   Displays hidden file and folders\n"
+        "    --deleted  Displays deleted file and folders\n"
         "    --data     Displays raw data for files\n"
         "    -h         Prints this help message\n"
         "\n"
         "Example:\n"
         "\n"
-        "    fatdump fat-disk.img\n"
+        "    fatdump --hidden --deleted fat-disk.img\n"
      );
 }

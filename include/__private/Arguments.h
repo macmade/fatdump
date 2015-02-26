@@ -88,6 +88,7 @@ struct __Arguments
     bool         showDir;
     bool         showRawDir;
     bool         showHidden;
+    bool         showDeleted;
     bool         showData;
     const char * diskPath;
 };

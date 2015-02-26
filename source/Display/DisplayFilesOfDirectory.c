@@ -67,31 +67,13 @@
 #include "Display.h"
 #include "Print.h"
 
-void DisplayFilesOfDirectory( DirRef dir, bool showHidden, int level )
+void DisplayFilesOfDirectory( DirRef dir, bool showHidden, bool showDeleted, int level )
 {
     DirEntryRef   entry;
     size_t        entries;
     size_t        i;
     int           j;
     MutableDirRef subDir;
-    
-    /*
-    --------------------------
-    Files in volume: TEST       
-    --------------------------
-    [+] SUBDIR: [2]
-     |  |- A.TXT <1.23 MB>
-     |  |- A.TXT <1.23 MB>
-     | [+] SUBSUB: [2]
-     |  |  |- A.TXT <1.23 MB>
-     |  |  |- A.TXT <1.23 MB>
-     |- A.TXT <1.23 MB>
-     |- B.TXT <1.23 MB>
-    [+] SUBDIR2: [0]
-    [+] SUBDIR2: [0]
-     |- ?TX~1.SB- <1.23 MB>
-     |-----------------------
-    */
     
     if( dir == NULL )
     {
@@ -109,8 +91,8 @@ void DisplayFilesOfDirectory( DirRef dir, bool showHidden, int level )
                DirEntryIsLFN( entry )
             || DirEntryIsFree( entry )
             || DirEntryIsVolumeID( entry )
-            || DirEntryIsDeleted( entry )
-            || ( DirEntryIsHidden( entry ) && !showHidden )
+            || ( DirEntryIsHidden( entry )  && showHidden  == false )
+            || ( DirEntryIsDeleted( entry ) && showDeleted == false )
         )
         {
             continue;
@@ -143,7 +125,7 @@ void DisplayFilesOfDirectory( DirRef dir, bool showHidden, int level )
             else
             {
                 printf( "[+] %s: [xxx items]\n", DirEntryGetFilename( entry ) );
-                DisplayFilesOfDirectory( subDir, showHidden, level + 1 );
+                DisplayFilesOfDirectory( subDir, showHidden, showDeleted, level + 1 );
             }
             
             DirDelete( subDir );

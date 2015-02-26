@@ -67,7 +67,7 @@
 #include "Display.h"
 #include "Print.h"
 
-void DisplayFilesDataOfDirectory( DirRef dir, bool showHidden )
+void DisplayFilesDataOfDirectory( DirRef dir, bool showHidden, bool showDeleted )
 {
     DirEntryRef entry;
     size_t      entries;
@@ -94,7 +94,8 @@ void DisplayFilesDataOfDirectory( DirRef dir, bool showHidden )
             || DirEntryIsFree( entry )
             || DirEntryIsVolumeID( entry )
             || DirEntryIsDirectory( entry )
-            || ( DirEntryIsHidden( entry ) && !showHidden )
+            || ( DirEntryIsHidden( entry )  && showHidden  == false )
+            || ( DirEntryIsDeleted( entry ) && showDeleted == false )
         )
         {
             continue;
