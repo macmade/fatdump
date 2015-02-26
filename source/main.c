@@ -286,7 +286,7 @@ int main( int argc, char * argv[] )
                             {
                                 printf( "%-4lu: %-44s", i + k + 1, "LFN" );
                             }
-                            else if( DirEntryGetCluster( entry ) == 0 )
+                            else if( DirEntryIsFree( entry ) )
                             {
                                 printf( "%-4lu: %-44s", i + k + 1, "Free" );
                             }
@@ -299,7 +299,7 @@ int main( int argc, char * argv[] )
                         {
                             printf( ".................................................." );
                         }
-                        else if( DirEntryGetCluster( entry ) == 0 )
+                        else if( DirEntryIsFree( entry ) )
                         {
                             printf( "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" );
                         }

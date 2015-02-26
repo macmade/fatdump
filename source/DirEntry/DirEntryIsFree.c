@@ -64,51 +64,15 @@
  * @copyright       (c) 2010-2015, Jean-David Gadina - www.xs-labs.com
  */
 
-#ifndef FATDUMP_DIR_ENTRY_H
-#define FATDUMP_DIR_ENTRY_H
+#include "DirEntry.h"
+#include "__private/DirEntry.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef const struct __DirEntry * DirEntryRef;
-typedef       struct __DirEntry * MutableDirEntryRef;
-
-#include "C99.h"
-#include "Disk.h"
-
-enum
+bool DirEntryIsFree( DirEntryRef o )
 {
-    DirEntryAttributeUnknown   = 0x00,
-    DirEntryAttributeReadOnly  = 0x01,
-    DirEntryAttributeHidden    = 0x02,
-    DirEntryAttributeSystem    = 0x04,
-    DirEntryAttributeVolumeID  = 0x08,
-    DirEntryAttributeDirectory = 0x10,
-    DirEntryAttributeArchive   = 0x20,
-    DirEntryAttributeLFN       = 0x0F
-};
-
-MutableDirEntryRef  DirEntryCreate( FILE * fp, DirRef dir );
-void                DirEntryDelete( MutableDirEntryRef o );
-
-const void        * DirEntryGetData( DirEntryRef o );
-size_t              DirEntryGetDataSize( DirEntryRef o );
-
-bool                DirEntryIsLFN( DirEntryRef o );
-bool                DirEntryIsFree( DirEntryRef o );
-
-const char        * DirEntryGetName( DirEntryRef o );
-int                 DirEntryGetAttributes( DirEntryRef o );
-time_t              DirEntryGetCreationTime( DirEntryRef o );
-time_t              DirEntryGetLastAccessTime( DirEntryRef o );
-time_t              DirEntryGetLastModificationTime( DirEntryRef o );
-uint16_t            DirEntryGetCluster( DirEntryRef o );
-size_t              DirEntryGetSize( DirEntryRef o );
-
-
-#ifdef __cplusplus
+    if( o == NULL )
+    {
+        return false;
+    }
+    
+    return o->cluster == 0 && o->attributes == 0;
 }
-#endif
-
-#endif /* FATDUMP_DIR_ENTRY_H */
