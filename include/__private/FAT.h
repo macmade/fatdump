@@ -64,8 +64,8 @@
  * @copyright       (c) 2010-2015, Jean-David Gadina - www.xs-labs.com
  */
 
-#ifndef FATDUMP___PRIVATE_ROOT_FAT_H
-#define FATDUMP___PRIVATE_ROOT_FAT_H
+#ifndef FATDUMP___PRIVATE_FAT_H
+#define FATDUMP___PRIVATE_FAT_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -91,4 +91,4 @@ struct __FAT
 }
 #endif
 
-#endif /* FATDUMP___PRIVATE_ROOT_FAT_H */
+#endif /* FATDUMP___PRIVATE_FAT_H */
