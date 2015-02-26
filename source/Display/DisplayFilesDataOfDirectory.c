@@ -104,7 +104,7 @@ void DisplayFilesDataOfDirectory( DirRef dir, bool showHidden )
         
         if( data != NULL )
         {
-            PrintHeader( "Data for file: %s", DirEntryGetFilename( entry ) );
+            PrintHeader( "Data for file: %s - %lu bytes", DirEntryGetFilename( entry ), ( unsigned long )s );
             PrintData( data, s );
         }
         

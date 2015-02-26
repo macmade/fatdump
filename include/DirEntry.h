@@ -90,6 +90,7 @@ enum
 };
 
 MutableDirEntryRef  DirEntryCreate( FILE * fp, DirRef dir );
+MutableDirEntryRef  DirEntryCreateWithData( uint8_t * data, DirRef dir, bool freeWhenDone );
 void                DirEntryDelete( MutableDirEntryRef o );
 
 const void        * DirEntryGetData( DirEntryRef o );
@@ -104,6 +105,7 @@ bool                DirEntryIsVolumeID( DirEntryRef o );
 bool                DirEntryIsDirectory( DirEntryRef o );
 bool                DirEntryIsArchive( DirEntryRef o );
 bool                DirEntryIsLFN( DirEntryRef o );
+bool                DirEntryIsDeleted( DirEntryRef o );
 
 const char        * DirEntryGetFilename( DirEntryRef o );
 const char        * DirEntryGetName( DirEntryRef o );

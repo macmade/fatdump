@@ -67,34 +67,64 @@
 #include "DirEntry.h"
 #include "__private/DirEntry.h"
 
-MutableDirEntryRef DirEntryCreate( FILE * fp, DirRef dir )
+MutableDirEntryRef DirEntryCreateWithData( uint8_t * data, DirRef dir, bool freeWhenDone )
 {
-    uint8_t * data;
-    size_t    s;
+    struct __DirEntry * o;
+    char              * name;
+    char              * filename;
+    size_t              s;
     
-    if( fp == NULL || dir == NULL )
+    if( data == NULL || dir == NULL )
     {
         return NULL;
     }
     
-    data = malloc( 32 );
+    s        = 32;
+    o        = calloc( sizeof( struct __DirEntry ), 1 );
+    name     = calloc( 1, 12 );
+    filename = calloc( 1, 13 );
     
-    if( data == NULL )
+    if( o == NULL || name == NULL || filename == NULL )
     {
+        if( freeWhenDone )
+        {
+            free( data );
+        }
+        
+        free( o );
+        free( name );
+        free( filename );
         fprintf( stderr, "Error: out of memory.\n" );
         
         return NULL;
     }
     
-    s = fread( data, 1, 32, fp );
+    o->freeData     = freeWhenDone;
+    o->dataSize     = s;
+    o->data         = data;
+    o->name         = name;
+    o->filename     = filename;
+    o->dir          = dir;
+    o->attributes   = ( int )( data[ 11 ] );
     
-    if( s != 32 )
+    if( o->attributes == DirEntryAttributeLFN )
     {
-        free( data );
-        fprintf( stderr, "Error: invalid read of directory entry - Read %lu bytes, expected %i\n", s, 32 );
-        
-        return NULL;
+        return o;
     }
     
-    return DirEntryCreateWithData( data, dir, true );
+    memcpy( o->name, data, 11 );
+    __DirEntryFilename( o->name, o->filename );
+    
+    o->size = ( ( size_t )data[ 28 ] <<  0 )
+            | ( ( size_t )data[ 29 ] <<  8 )
+            | ( ( size_t )data[ 31 ] << 16 )
+            | ( ( size_t )data[ 30 ] << 24 );
+    
+    o->creationTime         = __DirEntryTimeFromUInt16( data + 16, data + 14 );
+    o->lastAccessTime       = __DirEntryTimeFromUInt16( data + 18, NULL );
+    o->lastModificationTime = __DirEntryTimeFromUInt16( data + 24, data + 22 );
+    
+    o->cluster = ( uint16_t )( ( ( uint16_t )data[ 26 ] ) | ( ( uint16_t )data[ 27 ] << 8 ) );
+    
+    return o;
 }

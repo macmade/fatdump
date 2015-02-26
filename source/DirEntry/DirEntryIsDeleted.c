@@ -67,34 +67,12 @@
 #include "DirEntry.h"
 #include "__private/DirEntry.h"
 
-MutableDirEntryRef DirEntryCreate( FILE * fp, DirRef dir )
+bool DirEntryIsDeleted( DirEntryRef o )
 {
-    uint8_t * data;
-    size_t    s;
-    
-    if( fp == NULL || dir == NULL )
+    if( o == NULL )
     {
-        return NULL;
+        return false;
     }
     
-    data = malloc( 32 );
-    
-    if( data == NULL )
-    {
-        fprintf( stderr, "Error: out of memory.\n" );
-        
-        return NULL;
-    }
-    
-    s = fread( data, 1, 32, fp );
-    
-    if( s != 32 )
-    {
-        free( data );
-        fprintf( stderr, "Error: invalid read of directory entry - Read %lu bytes, expected %i\n", s, 32 );
-        
-        return NULL;
-    }
-    
-    return DirEntryCreateWithData( data, dir, true );
+    return ( uint8_t )( o->name[ 0 ] ) == 0xE5;
 }

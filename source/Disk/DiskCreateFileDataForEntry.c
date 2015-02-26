@@ -104,7 +104,15 @@ void * DiskCreateFileDataForEntry( DiskRef o, DirEntryRef entry, size_t * size )
     }
     
     cluster   = DirEntryGetCluster( entry );
-    entrySize = DirEntryGetSize( entry );
+    
+    if( DirEntryIsDirectory( entry ) )
+    {
+        entrySize = MBRGetMaxRootDirEntries( o->mbr ) * 32;
+    }
+    else
+    {
+        entrySize = DirEntryGetSize( entry );
+    }
     
     if
     (

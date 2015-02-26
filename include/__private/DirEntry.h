@@ -93,6 +93,7 @@ struct __DirEntry
     time_t    lastModificationTime;
     uint16_t  cluster;
     size_t    size;
+    bool      freeData;
 };
 
 time_t __DirEntryTimeFromUInt16( uint8_t * dateData, uint8_t * timeData );

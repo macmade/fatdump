@@ -64,37 +64,74 @@
  * @copyright       (c) 2010-2015, Jean-David Gadina - www.xs-labs.com
  */
 
-#include "DirEntry.h"
-#include "__private/DirEntry.h"
+#include "Dir.h"
+#include "__private/Dir.h"
 
-MutableDirEntryRef DirEntryCreate( FILE * fp, DirRef dir )
+MutableDirRef DirCreateFromDirEntry( DiskRef disk, DirEntryRef subdirEntry )
 {
-    uint8_t * data;
-    size_t    s;
+    struct __Dir * o;
+    DirEntryRef  * entries;
+    DirEntryRef    entry;
+    void         * data;
+    size_t         s;
+    size_t         c;
+    size_t         i;
+    MBRRef         mbr;
     
-    if( fp == NULL || dir == NULL )
+    mbr = DiskGetMBR( disk );
+    
+    if( disk == NULL || subdirEntry == NULL || mbr == NULL )
     {
         return NULL;
     }
     
-    data = malloc( 32 );
-    
-    if( data == NULL )
+    if( DirEntryIsDirectory( subdirEntry ) == false )
     {
+        return NULL;
+    }
+    
+    c    = MBRGetMaxRootDirEntries( mbr );
+    data = DirEntryCreateFileData( subdirEntry, &s );
+    
+    if( data == NULL || s == 0 )
+    {
+        return NULL;
+    }
+    
+    o       = calloc( sizeof( struct __Dir ), 1 );
+    entries = calloc( sizeof( DirEntryRef ), c );
+    
+    if( o == NULL || entries == NULL )
+    {
+        free( o );
+        free( data );
+        free( entries );
         fprintf( stderr, "Error: out of memory.\n" );
         
         return NULL;
     }
     
-    s = fread( data, 1, 32, fp );
+    o->dataSize     = s;
+    o->entryCount   = c;
+    o->data         = data;
+    o->entries      = entries;
+    o->disk         = disk;
     
-    if( s != 32 )
+    for( i = 0; i < c; i++ )
     {
-        free( data );
-        fprintf( stderr, "Error: invalid read of directory entry - Read %lu bytes, expected %i\n", s, 32 );
+        entry = DirEntryCreateWithData( o->data + ( i * ( s / c ) ), o, false );
         
-        return NULL;
+        if( entry == NULL )
+        {
+            free( o );
+            free( data );
+            free( entries );
+            
+            return NULL;
+        }
+        
+        o->entries[ i ] = entry;
     }
     
-    return DirEntryCreateWithData( data, dir, true );
+    return o;
 }

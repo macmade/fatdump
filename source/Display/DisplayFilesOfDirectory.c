@@ -69,11 +69,11 @@
 
 void DisplayFilesOfDirectory( DirRef dir, bool showHidden, int level )
 {
-    DirEntryRef entry;
-    size_t      entries;
-    size_t      i;
-    int         j;
-    size_t      c;
+    DirEntryRef   entry;
+    size_t        entries;
+    size_t        i;
+    int           j;
+    MutableDirRef subDir;
     
     /*
     --------------------------
@@ -98,7 +98,6 @@ void DisplayFilesOfDirectory( DirRef dir, bool showHidden, int level )
         return;
     }
     
-    c       = PrintGetAvailableColumns();
     entries = DirGetEntryCount( dir );
     
     for( i = 0; i < entries; i++ )
@@ -110,6 +109,7 @@ void DisplayFilesOfDirectory( DirRef dir, bool showHidden, int level )
                DirEntryIsLFN( entry )
             || DirEntryIsFree( entry )
             || DirEntryIsVolumeID( entry )
+            || DirEntryIsDeleted( entry )
             || ( DirEntryIsHidden( entry ) && !showHidden )
         )
         {
@@ -118,12 +118,35 @@ void DisplayFilesOfDirectory( DirRef dir, bool showHidden, int level )
         
         for( j = 0; j < level; j++ )
         {
-            printf( " | " );
+            printf( " |  " );
         }
         
         if( DirEntryIsDirectory( entry ) )
         {
-            printf( "[+] %s: [0]\n", DirEntryGetFilename( entry ) );
+            if
+            (
+                   strcmp( DirEntryGetFilename( entry ), "."  ) == 0
+                || strcmp( DirEntryGetFilename( entry ), ".." ) == 0
+            )
+            {
+                printf( "[+] %s\n", DirEntryGetFilename( entry ) );
+                
+                continue;
+            }
+            
+            subDir = DirCreateFromDirEntry( DirGetDisk( dir ), entry );
+            
+            if( subDir == NULL )
+            {
+                printf( "[+] %s: [error]\n", DirEntryGetFilename( entry ) );
+            }
+            else
+            {
+                printf( "[+] %s: [xxx items]\n", DirEntryGetFilename( entry ) );
+                DisplayFilesOfDirectory( subDir, showHidden, level + 1 );
+            }
+            
+            DirDelete( subDir );
         }
         else
         {
