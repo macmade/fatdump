@@ -66,6 +66,7 @@
 
 #include "Display.h"
 #include "Print.h"
+#include "IO.h"
 
 void DisplayFilesOfDirectory( DirRef dir, bool showHidden, bool showDeleted, int level )
 {
@@ -118,13 +119,10 @@ void DisplayFilesOfDirectory( DirRef dir, bool showHidden, bool showDeleted, int
             
             subDir = DirCreateFromDirEntry( DirGetDisk( dir ), entry );
             
-            if( subDir == NULL )
+            printf( "[+] %s\n", DirEntryGetFilename( entry ) );
+            
+            if( subDir != NULL )
             {
-                printf( "[+] %s: [error]\n", DirEntryGetFilename( entry ) );
-            }
-            else
-            {
-                printf( "[+] %s: [xxx items]\n", DirEntryGetFilename( entry ) );
                 DisplayFilesOfDirectory( subDir, showHidden, showDeleted, level + 1 );
             }
             
@@ -132,7 +130,24 @@ void DisplayFilesOfDirectory( DirRef dir, bool showHidden, bool showDeleted, int
         }
         else
         {
-            printf( " |- %s <1.23 MB>\n", DirEntryGetFilename( entry ) );
+            {
+                const char * unit;
+                double       size;
+                size_t       s;
+                
+                s = DirEntryGetSize( entry );
+                
+                if( s < 1024 )
+                {
+                    printf( " |- %s <%lu bytes>\n", DirEntryGetFilename( entry ), ( unsigned long )s );
+                }
+                else
+                {
+                    size = IOHumanFileSize( s, &unit );
+                    
+                    printf( " |- %s <%.02f %s>\n", DirEntryGetFilename( entry ), size, unit );
+                }
+            }
         }
     }
 }

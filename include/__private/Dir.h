@@ -88,6 +88,7 @@ struct __Dir
     DirEntryRef * entries;
     size_t        dataSize;
     size_t        entryCount;
+    DirEntryRef   parentEntry;
 };
 
 #ifdef __clang__

@@ -73,7 +73,8 @@ extern "C" {
 
 #include "C99.h"
 
-bool IOFileExists( const char * path );
+bool   IOFileExists( const char * path );
+double IOHumanFileSize( size_t bytes, const char ** unit );
 
 #ifdef __cplusplus
 }

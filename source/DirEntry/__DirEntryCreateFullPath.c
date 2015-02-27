@@ -64,75 +64,64 @@
  * @copyright       (c) 2010-2015, Jean-David Gadina - www.xs-labs.com
  */
 
-#include "Dir.h"
-#include "__private/Dir.h"
+#include "DirEntry.h"
+#include "__private/DirEntry.h"
 
-MutableDirRef DirCreateFromDirEntry( DiskRef disk, DirEntryRef subdirEntry )
+char * __DirEntryCreateFullPath( const char * filename, DirRef dir )
 {
-    struct __Dir * o;
-    DirEntryRef  * entries;
-    DirEntryRef    entry;
-    void         * data;
-    size_t         s;
-    size_t         c;
-    size_t         i;
-    MBRRef         mbr;
+    size_t       l1;
+    size_t       l2;
+    size_t       s;
+    size_t       i;
+    DirEntryRef  e;
+    DirRef       d;
+    const char * n;
+    char       * p;
     
-    mbr = DiskGetMBR( disk );
-    
-    if( disk == NULL || subdirEntry == NULL || mbr == NULL )
+    if( filename == NULL || dir == NULL )
     {
         return NULL;
     }
     
-    if( DirEntryIsDirectory( subdirEntry ) == false )
+    d = dir;
+    s = strlen( filename ) + 2;
+    
+    while( ( e = DirGetParentEntry( dir ) ) )
+    {
+        s  += strlen( DirEntryGetFilename( e ) ) + 1;
+        dir = DirEntryGetDir( e );
+    }
+    
+    p = calloc( 1, s );
+    
+    if( p == NULL )
     {
         return NULL;
     }
     
-    c    = MBRGetMaxRootDirEntries( mbr );
-    data = DirEntryCreateFileData( subdirEntry, &s );
-    
-    if( data == NULL || s == 0 )
+    while( ( e = DirGetParentEntry( d ) ) )
     {
-        return NULL;
-    }
-    
-    o       = calloc( sizeof( struct __Dir ), 1 );
-    entries = calloc( sizeof( DirEntryRef ), c );
-    
-    if( o == NULL || entries == NULL )
-    {
-        free( o );
-        free( data );
-        free( entries );
-        fprintf( stderr, "Error: out of memory.\n" );
+        n  = DirEntryGetFilename( e );
+        l1 = strlen( n );
+        l2 = strlen( p );
         
-        return NULL;
-    }
-    
-    o->dataSize     = s;
-    o->entryCount   = c;
-    o->data         = data;
-    o->entries      = entries;
-    o->disk         = disk;
-    o->parentEntry  = subdirEntry;
-    
-    for( i = 0; i < c; i++ )
-    {
-        entry = DirEntryCreateWithData( o->data + ( i * ( s / c ) ), o, false );
-        
-        if( entry == NULL )
+        for( i = l2 + 1; i > 0; i-- )
         {
-            free( o );
-            free( data );
-            free( entries );
-            
-            return NULL;
+            p[ l1 + i ] = p[ i - 1 ];
         }
         
-        o->entries[ i ] = entry;
+        for( i = 0; i < l1; i++ )
+        {
+            p[ i + 1 ] = n[ i ];
+        }
+        
+        p[ 0 ] = '/';
+        
+        d = DirEntryGetDir( e );
     }
     
-    return o;
+    strcat( p, "/" );
+    strcat( p, filename );
+    
+    return p;
 }

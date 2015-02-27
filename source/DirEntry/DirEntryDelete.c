@@ -80,6 +80,7 @@ void DirEntryDelete( MutableDirEntryRef o )
     }
     
     free( o->name );
+    free( o->fullPath );
     free( o->filename );
     free( o );
 }

@@ -66,6 +66,7 @@
 
 #include "Display.h"
 #include "Print.h"
+#include "IO.h"
 
 void DisplayFilesDataOfDirectory( DirRef dir, bool showHidden, bool showDeleted )
 {
@@ -130,8 +131,23 @@ void DisplayFilesDataOfDirectory( DirRef dir, bool showHidden, bool showDeleted 
             
             if( data != NULL )
             {
-                PrintHeader( "Data for file: %s - %lu bytes", DirEntryGetFilename( entry ), ( unsigned long )s );
-                PrintData( data, s );
+                {
+                    const char * unit;
+                    double       size;
+                    
+                    if( s < 1024 )
+                    {
+                        PrintHeader( "Data for file: %s - %lu bytes", DirEntryGetFullPath( entry ), ( unsigned long )s );
+                    }
+                    else
+                    {
+                        size = IOHumanFileSize( s, &unit );
+                        
+                        PrintHeader( "Data for file: %s - %.02f %s", DirEntryGetFullPath( entry ), size, unit );
+                    }
+                    
+                    PrintData( data, s );
+                }
             }
             
             free( data );

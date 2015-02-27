@@ -64,75 +64,48 @@
  * @copyright       (c) 2010-2015, Jean-David Gadina - www.xs-labs.com
  */
 
-#include "Dir.h"
-#include "__private/Dir.h"
+#include "IO.h"
 
-MutableDirRef DirCreateFromDirEntry( DiskRef disk, DirEntryRef subdirEntry )
+static const char * __units[ 4 ] = { "B", "KB", "MB", "TB" };
+
+double IOHumanFileSize( size_t bytes, const char ** unit )
 {
-    struct __Dir * o;
-    DirEntryRef  * entries;
-    DirEntryRef    entry;
-    void         * data;
-    size_t         s;
-    size_t         c;
-    size_t         i;
-    MBRRef         mbr;
+    double s;
     
-    mbr = DiskGetMBR( disk );
+    s = ( double )bytes;
     
-    if( disk == NULL || subdirEntry == NULL || mbr == NULL )
+    if( bytes >= 1024 * 1024 * 1024 )
     {
-        return NULL;
-    }
-    
-    if( DirEntryIsDirectory( subdirEntry ) == false )
-    {
-        return NULL;
-    }
-    
-    c    = MBRGetMaxRootDirEntries( mbr );
-    data = DirEntryCreateFileData( subdirEntry, &s );
-    
-    if( data == NULL || s == 0 )
-    {
-        return NULL;
-    }
-    
-    o       = calloc( sizeof( struct __Dir ), 1 );
-    entries = calloc( sizeof( DirEntryRef ), c );
-    
-    if( o == NULL || entries == NULL )
-    {
-        free( o );
-        free( data );
-        free( entries );
-        fprintf( stderr, "Error: out of memory.\n" );
-        
-        return NULL;
-    }
-    
-    o->dataSize     = s;
-    o->entryCount   = c;
-    o->data         = data;
-    o->entries      = entries;
-    o->disk         = disk;
-    o->parentEntry  = subdirEntry;
-    
-    for( i = 0; i < c; i++ )
-    {
-        entry = DirEntryCreateWithData( o->data + ( i * ( s / c ) ), o, false );
-        
-        if( entry == NULL )
+        if( unit != NULL )
         {
-            free( o );
-            free( data );
-            free( entries );
-            
-            return NULL;
+            *( unit ) = __units[ 3 ];
         }
         
-        o->entries[ i ] = entry;
+        return ( ( s / 1024 ) / 1024 ) / 1024;
+    }
+    else if( bytes >= 1024 * 1024 )
+    {
+        if( unit != NULL )
+        {
+            *( unit ) = __units[ 2 ];
+        }
+        
+        return ( s / 1024 ) / 1024;
+    }
+    else if( bytes >= 1024 )
+    {
+        if( unit != NULL )
+        {
+            *( unit ) = __units[ 1 ];
+        }
+        
+        return s / 1024;
     }
     
-    return o;
+    if( unit != NULL )
+    {
+        *( unit ) = __units[ 0 ];
+    }
+    
+    return s;
 }

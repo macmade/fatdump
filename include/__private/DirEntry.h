@@ -86,6 +86,7 @@ struct __DirEntry
     size_t    dataSize;
     DirRef    dir;
     char    * name;
+    char    * fullPath;
     char    * filename;
     int       attributes;
     time_t    creationTime;
@@ -98,6 +99,7 @@ struct __DirEntry
 
 time_t __DirEntryTimeFromUInt16( uint8_t * dateData, uint8_t * timeData );
 void   __DirEntryFilename( const char * name, char * buf );
+char * __DirEntryCreateFullPath( const char * filename, DirRef dir );
 
 #ifdef __clang__
 #pragma clang diagnostic pop

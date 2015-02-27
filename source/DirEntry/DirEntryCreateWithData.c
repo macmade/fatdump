@@ -114,6 +114,7 @@ MutableDirEntryRef DirEntryCreateWithData( uint8_t * data, DirRef dir, bool free
     
     memcpy( o->name, data, 11 );
     __DirEntryFilename( o->name, o->filename );
+    o->fullPath = __DirEntryCreateFullPath( o->filename, dir );
     
     o->size = ( ( size_t )data[ 28 ] <<  0 )
             | ( ( size_t )data[ 29 ] <<  8 )

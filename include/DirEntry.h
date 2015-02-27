@@ -94,6 +94,7 @@ MutableDirEntryRef  DirEntryCreateWithData( uint8_t * data, DirRef dir, bool fre
 void                DirEntryDelete( MutableDirEntryRef o );
 
 const void        * DirEntryGetData( DirEntryRef o );
+DirRef              DirEntryGetDir( DirEntryRef o );
 size_t              DirEntryGetDataSize( DirEntryRef o );
 void              * DirEntryCreateFileData( DirEntryRef o, size_t * size );
 
@@ -107,6 +108,7 @@ bool                DirEntryIsArchive( DirEntryRef o );
 bool                DirEntryIsLFN( DirEntryRef o );
 bool                DirEntryIsDeleted( DirEntryRef o );
 
+const char        * DirEntryGetFullPath( DirEntryRef o );
 const char        * DirEntryGetFilename( DirEntryRef o );
 const char        * DirEntryGetName( DirEntryRef o );
 int                 DirEntryGetAttributes( DirEntryRef o );
