@@ -1,3 +1,0 @@
-[submodule "make"]
-	path = make
-	url = https://github.com/macmade/XEOS-makefile.git
