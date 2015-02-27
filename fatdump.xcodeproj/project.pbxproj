@@ -27,16 +27,16 @@
 /* End PBXGroup section */
 
 /* Begin PBXLegacyTarget section */
-		0581A36B1A9C10D50009D62C /* XEOS-tools-fatdump */ = {
+		0581A36B1A9C10D50009D62C /* fatdump */ = {
 			isa = PBXLegacyTarget;
 			buildArgumentsString = "$(ACTION)";
-			buildConfigurationList = 0581A36E1A9C10D50009D62C /* Build configuration list for PBXLegacyTarget "XEOS-tools-fatdump" */;
+			buildConfigurationList = 0581A36E1A9C10D50009D62C /* Build configuration list for PBXLegacyTarget "fatdump" */;
 			buildPhases = (
 			);
 			buildToolPath = /usr/bin/make;
 			dependencies = (
 			);
-			name = "XEOS-tools-fatdump";
+			name = fatdump;
 			passBuildSettingsInEnvironment = 1;
 			productName = XEOS;
 		};
@@ -54,7 +54,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 0581A36A1A9C10D50009D62C /* Build configuration list for PBXProject "XEOS-tools-fatdump" */;
+			buildConfigurationList = 0581A36A1A9C10D50009D62C /* Build configuration list for PBXProject "fatdump" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -66,7 +66,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				0581A36B1A9C10D50009D62C /* XEOS-tools-fatdump */,
+				0581A36B1A9C10D50009D62C /* fatdump */,
 			);
 		};
 /* End PBXProject section */
@@ -99,7 +99,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0581A36A1A9C10D50009D62C /* Build configuration list for PBXProject "XEOS-tools-fatdump" */ = {
+		0581A36A1A9C10D50009D62C /* Build configuration list for PBXProject "fatdump" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0581A36C1A9C10D50009D62C /* Debug */,
@@ -108,7 +108,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0581A36E1A9C10D50009D62C /* Build configuration list for PBXLegacyTarget "XEOS-tools-fatdump" */ = {
+		0581A36E1A9C10D50009D62C /* Build configuration list for PBXLegacyTarget "fatdump" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0581A36F1A9C10D50009D62C /* Debug */,

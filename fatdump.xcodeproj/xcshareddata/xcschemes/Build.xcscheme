@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "0581A36B1A9C10D50009D62C"
-               BuildableName = "XEOS-tools-fatdump"
-               BlueprintName = "XEOS-tools-fatdump"
-               ReferencedContainer = "container:XEOS-tools-fatdump.xcodeproj">
+               BuildableName = "fatdump"
+               BlueprintName = "fatdump"
+               ReferencedContainer = "container:fatdump.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -43,9 +43,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0581A36B1A9C10D50009D62C"
-            BuildableName = "XEOS-tools-fatdump"
-            BlueprintName = "XEOS-tools-fatdump"
-            ReferencedContainer = "container:XEOS-tools-fatdump.xcodeproj">
+            BuildableName = "fatdump"
+            BlueprintName = "fatdump"
+            ReferencedContainer = "container:fatdump.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -61,9 +61,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0581A36B1A9C10D50009D62C"
-            BuildableName = "XEOS-tools-fatdump"
-            BlueprintName = "XEOS-tools-fatdump"
-            ReferencedContainer = "container:XEOS-tools-fatdump.xcodeproj">
+            BuildableName = "fatdump"
+            BlueprintName = "fatdump"
+            ReferencedContainer = "container:fatdump.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>
