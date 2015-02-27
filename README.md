@@ -37,6 +37,14 @@ Usage
     
         fatdump --hidden --deleted fat-disk.img
 
+Extracting files
+----------------
+
+All files can be extracted in the current working directory using the `--extract` option.
+
+Note that hidden files can be extracted with the `--hidden` option, as well as deleted files with the `--deleted` option.  
+This can be useful for data-recovery or forensics.
+
 Example output
 --------------
 
@@ -65,7 +73,6 @@ By default, `fatdump` will only display the FAT volume's hierarchy:
 
 File's data can be displayed with the `--data` option.  
 Note that hidden files can be displayed as well with the `--hidden` option, as well as deleted files with the `--deleted` option.  
-This can be useful for data-recovery or forensics.
 
     $ fatdump --data disk.img
     ----------------------------------------------------------------------------------------------------------------------

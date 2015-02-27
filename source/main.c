@@ -139,12 +139,12 @@ int main( int argc, char * argv[] )
         DisplayFilesData( disk, ArgumentsGetShowHidden( args ), ArgumentsGetShowDeleted( args ) );
     }
     
+    PrintLine();
+    
     if( ArgumentsGetExtract( args ) )
     {
         ExtractFilesFromDisk( disk, ArgumentsGetShowHidden( args ), ArgumentsGetShowDeleted( args ) );
     }
-    
-    PrintLine();
     
     success:
     

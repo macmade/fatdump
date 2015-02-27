@@ -74,7 +74,6 @@ void DisplayFilesDataOfDirectory( DirRef dir, bool showHidden, bool showDeleted 
     DirEntryRef   entry;
     size_t        entries;
     size_t        i;
-    size_t        c;
     size_t        s;
     void        * data;
     
@@ -83,7 +82,6 @@ void DisplayFilesDataOfDirectory( DirRef dir, bool showHidden, bool showDeleted 
         return;
     }
     
-    c       = PrintGetAvailableColumns();
     entries = DirGetEntryCount( dir );
     
     for( i = 0; i < entries; i++ )

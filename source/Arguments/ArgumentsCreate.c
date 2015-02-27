@@ -125,7 +125,7 @@ MutableArgumentsRef ArgumentsCreate( int argc, const char ** argv )
         }
         else if( strcmp( argv[ i ], "--extract" ) == 0 )
         {
-            o->showData = true;
+            o->extract = true;
         }
         else
         {

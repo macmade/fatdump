@@ -66,81 +66,57 @@
 
 #include "Extract.h"
 #include "__private/Extract.h"
+#include <sys/stat.h>
 
-void ExtractFilesFromDirectory( DirRef dir, bool hidden, bool deleted )
+bool __ExtractWriteData( void * data, DirEntryRef entry )
 {
-    MutableDirRef subDir;
-    DirEntryRef   entry;
-    size_t        entries;
-    size_t        i;
-    size_t        s;
-    void        * data;
+    const char * entryPath;
+    char       * relPath;
+    char       * s;
+    size_t       len;
+    FILE       * fp;
     
-    if( dir == NULL )
+    if( data == NULL || entry == NULL )
     {
-        return;
+        return false;
     }
     
-    entries = DirGetEntryCount( dir );
+    entryPath = DirEntryGetFullPath( entry );
+    len       = strlen( entryPath );
+    relPath   = calloc( 1, len );
     
-    for( i = 0; i < entries; i++ )
+    if( relPath == NULL )
     {
-        entry = DirGetEntry( dir, i );
-        
-        if
-        (
-               DirEntryIsLFN( entry )
-            || DirEntryIsFree( entry )
-            || DirEntryIsVolumeID( entry )
-            || ( DirEntryIsHidden( entry )  && hidden  == false )
-            || ( DirEntryIsDeleted( entry ) && deleted == false )
-        )
-        {
-            continue;
-        }
-        
-        if( DirEntryIsDirectory( entry ) )
-        {
-            subDir = DirCreateFromDirEntry( DirGetDisk( dir ), entry );
-            
-            if( subDir == NULL )
-            {
-                continue;
-            }
-            else if
-            (
-                   strcmp( DirEntryGetFilename( entry ), "."  ) == 0
-                || strcmp( DirEntryGetFilename( entry ), ".." ) == 0
-            )
-            {
-                continue;
-            }
-            else
-            {
-                ExtractFilesFromDirectory( subDir, hidden, deleted );
-            }
-            
-            DirDelete( subDir );
-        }
-        else
-        {
-            data = DirEntryCreateFileData( entry, &s );
-            
-            if( data != NULL )
-            {
-                printf( "Extracting file: %s - %lu bytes: ", DirEntryGetFullPath( entry ), ( unsigned long )s );
-                
-                if( __ExtractWriteData( data, entry ) )
-                {
-                    printf( "[OK]\n" );
-                }
-                else
-                {
-                    printf( "[ERROR]\n" );
-                }
-            }
-            
-            free( data );
-        }
+        return false;
     }
+    
+    strcpy( relPath, entryPath + 1 );
+    
+    s = relPath;
+    
+    while( ( s = strchr( s, '/' ) ) )
+    {
+        s[ 0 ] = 0;
+        
+        mkdir( relPath, 0700 );
+        
+        s[ 0 ] = '/';
+        
+        s++;
+    }
+    
+    fp = fopen( relPath, "wb" );
+    
+    if( fp == NULL )
+    {
+        free( relPath );
+        
+        return false;
+    }
+    
+    fwrite( data, 1, DirEntryGetSize( entry ), fp );
+    fclose( fp );
+    free( relPath );
+    
+    return true;
 }

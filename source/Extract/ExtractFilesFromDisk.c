@@ -65,6 +65,7 @@
  */
 
 #include "Extract.h"
+#include "__private/Extract.h"
 
 void ExtractFilesFromDisk( DiskRef disk, bool hidden, bool deleted )
 {
