@@ -1,8 +1,8 @@
-XEOS / tools / fatdump
-======================
+fatdump
+=======
 
-[![Build Status](https://img.shields.io/travis/macmade/XEOS-tools-fatdump.svg?branch=master&style=flat)](https://travis-ci.org/macmade/XEOS-tools-fatdump)
-[![Issues](http://img.shields.io/github/issues/macmade/XEOS-tools-fatdump.svg?style=flat)](https://github.com/macmade/XEOS-tools-fatdump/issues)
+[![Build Status](https://img.shields.io/travis/macmade/fatdump.svg?branch=master&style=flat)](https://travis-ci.org/macmade/fatdump)
+[![Issues](http://img.shields.io/github/issues/macmade/fatdump.svg?style=flat)](https://github.com/macmade/fatdump/issues)
 ![Status](https://img.shields.io/badge/status-active-brightgreen.svg?style=flat)
 ![License](https://img.shields.io/badge/license-xeos-brightgreen.svg?style=flat)
 [![Contact](https://img.shields.io/badge/contact-@macmade-blue.svg?style=flat)](https://twitter.com/macmade)
@@ -10,9 +10,7 @@ XEOS / tools / fatdump
 About
 -----
 
-**fatdump utility for building the XEOS Operating System.**
-
-This subproject is part of the [XEOS Operating System](https://github.com/macmade/XEOS/) project.
+fatdump is a command line tool to extract data from FAT disk images.
 
 Usage
 -----
@@ -205,7 +203,7 @@ The volume's root directory can be displayed with the `--dir` option (`--dir-raw
 License
 -------
 
-XEOS is released under the terms of the XEOS Software License.
+fatdump is released under the terms of the BSD License.
 
 Repository Infos
 ----------------
