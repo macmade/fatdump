@@ -64,30 +64,22 @@
  * @copyright       (c) 2010-2015, Jean-David Gadina - www.xs-labs.com
  */
 
-#include "Help.h"
+#ifndef FATDUMP_EXTRACT_H
+#define FATDUMP_EXTRACT_H
 
-void HelpDisplay( void )
-{
-    printf
-    (
-        "fatdump [OPTIONS] IMAGE\n"
-        "\n"
-        "Options\n"
-        "\n"
-        "    --mbr      Prints MBR infos\n"
-        "    --mbr-raw  Prints raw MBR data\n"
-        "    --fat      Prints FAT infos\n"
-        "    --fat-raw  Prints raw FAT data\n"
-        "    --dir      Prints root directory infos\n"
-        "    --dir-raw  Prints raw root directory data\n"
-        "    --hidden   Displays hidden file and folders\n"
-        "    --deleted  Displays deleted file and folders\n"
-        "    --data     Displays raw data for files\n"
-        "    --extract  Extract files in the current directory\n"
-        "    -h         Prints this help message\n"
-        "\n"
-        "Example:\n"
-        "\n"
-        "    fatdump --hidden --deleted fat-disk.img\n"
-     );
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "C99.h"
+#include "Disk.h"
+#include "Dir.h"
+
+void ExtractFilesFromDisk( DiskRef disk, bool hidden, bool deleted );
+void ExtractFilesFromDirectory( DirRef dir, bool hidden, bool deleted );
+
+#ifdef __cplusplus
 }
+#endif
+
+#endif /* FATDUMP_EXTRACT_H */

@@ -93,6 +93,7 @@ bool                ArgumentsGetShowHelp( ArgumentsRef o );
 bool                ArgumentsGetShowHidden( ArgumentsRef o );
 bool                ArgumentsGetShowDeleted( ArgumentsRef o );
 bool                ArgumentsGetShowData( ArgumentsRef o );
+bool                ArgumentsGetExtract( ArgumentsRef o );
 
 #ifdef __cplusplus
 }

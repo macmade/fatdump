@@ -30,6 +30,7 @@ Usage
         --hidden   Displays hidden file and folders
         --deleted  Displays deleted file and folders
         --data     Displays raw data for files
+        --extract  Extract files in the current directory
         -h         Prints this help message
     
     Example:

@@ -90,6 +90,7 @@ struct __Arguments
     bool         showHidden;
     bool         showDeleted;
     bool         showData;
+    bool         extract;
     const char * diskPath;
 };
 

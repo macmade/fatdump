@@ -72,6 +72,7 @@
 #include "FAT.h"
 #include "Dir.h"
 #include "Display.h"
+#include "Extract.h"
 
 int main( int argc, char * argv[] )
 {
@@ -136,6 +137,11 @@ int main( int argc, char * argv[] )
     if( ArgumentsGetShowData( args ) )
     {
         DisplayFilesData( disk, ArgumentsGetShowHidden( args ), ArgumentsGetShowDeleted( args ) );
+    }
+    
+    if( ArgumentsGetExtract( args ) )
+    {
+        ExtractFilesFromDisk( disk, ArgumentsGetShowHidden( args ), ArgumentsGetShowDeleted( args ) );
     }
     
     PrintLine();

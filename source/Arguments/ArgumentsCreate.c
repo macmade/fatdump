@@ -123,6 +123,10 @@ MutableArgumentsRef ArgumentsCreate( int argc, const char ** argv )
         {
             o->showData = true;
         }
+        else if( strcmp( argv[ i ], "--extract" ) == 0 )
+        {
+            o->showData = true;
+        }
         else
         {
             if( o->diskPath == NULL )
