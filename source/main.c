@@ -42,7 +42,7 @@
 #include "Display.h"
 #include "Extract.h"
 
-int main( int argc, char * argv[] )
+int main( int argc, const char * argv[] )
 {
     MutableArgumentsRef args;
     MutableDiskRef      disk;

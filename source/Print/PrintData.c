@@ -36,10 +36,10 @@
 
 void PrintData( const void * data, size_t size )
 {
-    uint8_t * p;
-    size_t    i;
-    size_t    n;
-    size_t    c;
+    const uint8_t * p;
+    size_t          i;
+    size_t          n;
+    size_t          c;
     
     if( data == NULL )
     {
@@ -54,7 +54,7 @@ void PrintData( const void * data, size_t size )
     }
     
     n = ( c - 2 ) / 4;
-    p = ( uint8_t * )data;
+    p = ( const uint8_t * )data;
     
     while( size > n )
     {
