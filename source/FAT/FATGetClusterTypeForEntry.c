@@ -94,7 +94,7 @@ FATClusterType FATGetClusterTypeForEntry( FATRef o, size_t entry )
         {
             return FATClusterTypeBad;
         }
-        else if( cluster >= 0xFFF8 && cluster <= 0xFFFF )
+        else if( cluster >= 0xFFF8 )
         {
             return FATClusterTypeLast;
         }
